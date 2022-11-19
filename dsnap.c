@@ -1,4 +1,4 @@
-/* dsnap.c: 
+/* dsnap.c:  [UTF-8 file]
    Routines for handling Didaktik D40/D80 snapshot files (when extracted from floppy image).
    D40's snapshot creates files on disk with name like SNAPSHOT00.S .. SNAPSHOT99.S .
    Thou only 7 of them fit on a 40 track (D40) and 14 on an 80 track floppy (D80).
@@ -11,13 +11,15 @@
    - Only supporting/saving 48KB spectrum/didaktik.
    - On real HW registers are stored into D40's DRAM (last 128 bytes), not affecting standard RAM.
    - Size of file is always #C080 (49280), starting address is #3F80 (16256).
-   - Does not save register "R" and others. So not doing complete work.
+   - Does not save register "R". IFF1/IFF2 considered together. IM0 not supported.
    - Data is stored into the head (before 16K) as stack. SP address first, followed by registers.
    - Order of saving registers: comments below
+   - You can use the app RIDE v.1.4.3 to export and import files from and into .d40 floppy images.
+     Just make sure to have at least "R" attribute for newly imported file(s), or it will not work.
 
-   Copyright (c) 2001-2002 Philip Kendall
-   Copyright (c) 2016 Fredrick Meunier
-
+   Written by (c) 2022 Miroslav Ďurčík (miro.arki55@gmail.com)
+   (with some code lines copied from other files in this lib)
+   
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2 of the License, or
@@ -32,7 +34,7 @@
    with this program; if not, write to the Free Software Foundation, Inc.,
    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-   Author contact information:
+   Author (of FUSE in general) contact information:
 
    E-mail: philip-fuse@shadowmagic.org.uk
 */
