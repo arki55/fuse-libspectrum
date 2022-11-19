@@ -898,7 +898,7 @@ snapshot to specify the creator of the file. This can be NULL, in
 which case no information will be written. Currently, only the .szx
 format will make any use of this information.
 
-The only formats for which serialisation is supported are .sna, .szx
+The only formats for which serialisation is supported are .sna, .szx, .s
 and .z80.
 
 Tape functions

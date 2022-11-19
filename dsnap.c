@@ -43,8 +43,14 @@
 
 #include "internals.h"
 
+// Parity flag in F reg.
+#define FLAG_P	0x04
+
 /* Length = 128 bytes + 48K */
 #define LIBSPECTRUM_DSNAP_HEADER_LENGTH 128
+
+/* File header - to mark snapshot created by FUSE from real HW */
+const char * const LIBSPECTRUM_DSNAP_SIGNATURE = "DSNAP@FUSE";
 
 static int identify_machine( size_t buffer_length, libspectrum_snap *snap );
 static int libspectrum_dsnap_read_header( const libspectrum_byte *buffer,
@@ -100,6 +106,7 @@ identify_machine( size_t buffer_length, libspectrum_snap *snap )
 }
 
 /**
+ * Read header part (128B) of Didaktik's snapshot.
  * Registers are stored like stack from 16K-2 downwards:
  * SP, AF, BC, DE, HL, (EXX, EX AF,AF') AF, BC, DE, HL, IX, IY, IReg
  */
@@ -140,6 +147,7 @@ libspectrum_dsnap_read_header( const libspectrum_byte *buffer,
   // The last one is I register, interrupt vector + if to use IM1 or IM2 + DI/EI
   // Note: "AF" Word is read from -24 . F is checked for "PE" condition, 
   //       then A is copied to I and compared to 63 (operation changes F).
+  //       Source of PE flag was operation LD A,I before which copies IFF2 to Parity.
   libspectrum_byte interrupt_flag1 = buffer[offset-24];     // F
   libspectrum_byte interrupt_flag2 = buffer[offset-24 +1];  // A
   
@@ -153,27 +161,33 @@ libspectrum_dsnap_read_header( const libspectrum_byte *buffer,
     libspectrum_snap_set_im( snap, 2 );
   }
 
-  if ( interrupt_flag1 & 0x04 ) {
+  if ( interrupt_flag1 & FLAG_P ) {
     // Allow interrupts ( PE condition flag on F )
-    libspectrum_snap_set_last_instruction_ei( snap, 1);
+    libspectrum_snap_set_iff1( snap, 1);
+    libspectrum_snap_set_iff2( snap, 1);
+  } else {
+    // I would assume default is 0, but debugging showed other wise
+    libspectrum_snap_set_iff1( snap, 0);
+    libspectrum_snap_set_iff2( snap, 0);
   }
 
   // Activate melodik. No idea how to make it optional.
   libspectrum_snap_set_melodik_active( snap, 1 );
   
-  /* PC is in loaded program's stack - will be set when data is loaded
-    libspectrum_snap_set_pc ( snap, 0 ); */
+  /*
+    PC is in loaded program's stack - will be set when data is loaded
+    libspectrum_snap_set_pc ( snap, 0 );
 
-  /*  The below registers are not supported:
-    libspectrum_snap_set_r  ( snap, 0 );
-    libspectrum_snap_set_iff1( snap, 0 );
-    libspectrum_snap_set_iff2( snap, 0 );
-    libspectrum_snap_set_out_ula( snap, 0 );
-  */
+   Not supported by this format:
+     libspectrum_snap_set_r ( snap, xxx );
+   */
 
   return LIBSPECTRUM_ERROR_NONE;
 }
 
+/**
+ * Read data part of Didaktik's snapshot. Whole 48Kb.
+ */
 static int
 libspectrum_dsnap_read_data( const libspectrum_byte *buffer,
 			   size_t buffer_length, libspectrum_snap *snap )
@@ -225,6 +239,9 @@ libspectrum_dsnap_read_data( const libspectrum_byte *buffer,
   return LIBSPECTRUM_ERROR_NONE;
 }
 
+/**
+ * Create snapshot compatible with Didaktik's snap button.
+ */
 libspectrum_error
 libspectrum_dsnap_write( libspectrum_buffer *buffer, int *out_flags,
                        libspectrum_snap *snap, int in_flags GCC_UNUSED )
@@ -232,12 +249,6 @@ libspectrum_dsnap_write( libspectrum_buffer *buffer, int *out_flags,
   libspectrum_word snap_sp;
   libspectrum_buffer *buffer_mem;
   libspectrum_error error = LIBSPECTRUM_ERROR_NONE;
-
-  /* TODO: Will be implemented later.. */
-  libspectrum_print_error( LIBSPECTRUM_ERROR_LOGIC,
-    "libspectrum_dsnap_write: TODO: Implemented writing of DSNAP" );
-  return LIBSPECTRUM_ERROR_LOGIC;
-
 
   /* Minor info loss already due to "R" register missing, etc.. */
   *out_flags = LIBSPECTRUM_FLAG_SNAPSHOT_MINOR_INFO_LOSS;
@@ -369,35 +380,69 @@ libspectrum_dsnap_write( libspectrum_buffer *buffer, int *out_flags,
 }
 
 /**
+ * Write header part of Didaktik's snapshot (128B).
  * Registers are stored like stack from 16K-2 downwards:
- * SP, AF, BC, DE, HL, (swap regs) AF, BC, DE, HL, IX, IY
+ * SP, AF, BC, DE, HL, (swap regs) AF, BC, DE, HL, IX, IY, I+EI/DI
  */
 static void
 write_header( libspectrum_buffer *buffer, libspectrum_snap *snap,
               libspectrum_word sp )
 {
-  libspectrum_buffer_write_byte( buffer, libspectrum_snap_i  ( snap ) );
-  libspectrum_buffer_write_word( buffer, libspectrum_snap_hl_( snap ) );
-  libspectrum_buffer_write_word( buffer, libspectrum_snap_de_( snap ) );
-  libspectrum_buffer_write_word( buffer, libspectrum_snap_bc_( snap ) );
-  libspectrum_buffer_write_byte( buffer, libspectrum_snap_f_ ( snap ) );
-  libspectrum_buffer_write_byte( buffer, libspectrum_snap_a_ ( snap ) );
-  libspectrum_buffer_write_word( buffer, libspectrum_snap_hl ( snap ) );
-  libspectrum_buffer_write_word( buffer, libspectrum_snap_de ( snap ) );
-  libspectrum_buffer_write_word( buffer, libspectrum_snap_bc ( snap ) );
+  // Header has 128B, but only last 24 bytes are used. Content before is irrelevant.
+  // Less by 10 chars - signature to flag snaphost created by fuse
+  libspectrum_buffer_write( buffer, LIBSPECTRUM_DSNAP_SIGNATURE, strlen(LIBSPECTRUM_DSNAP_SIGNATURE) );
+  short padding = LIBSPECTRUM_DSNAP_HEADER_LENGTH - 24 - strlen(LIBSPECTRUM_DSNAP_SIGNATURE) ;
+  for (short b=0; b < padding; b++) {
+    libspectrum_buffer_write_byte( buffer, 0 );
+  }
+
+  // The last one (when pushing into stack from the end of header) is I register, 
+  //    interrupt vector + if to use IM1 or IM2 + DI/EI
+
+  // If interrupts allowed (EI), then write 4 ("PE" bit on F reg.), else just 0.
+  // Source of PE is operation LD A,I which sets IFF2 to Parity flag.
+  if ( libspectrum_snap_iff2 ( snap ) == 1 ) {
+    libspectrum_buffer_write_byte( buffer, FLAG_P );
+  } else {
+    libspectrum_buffer_write_byte( buffer, 0 );
+  }
+
+  // If mode 2: I reg. is written, else "63" + mode 1 assumed
+  if ( libspectrum_snap_im( snap ) == 0x02 ) {
+    libspectrum_buffer_write_byte( buffer, libspectrum_snap_i ( snap ) ); 
+  } else {
+    libspectrum_buffer_write_byte( buffer, 63 ); 
+  }
+  
+
+  // IX, IY only once, have no shadow copies
   libspectrum_buffer_write_word( buffer, libspectrum_snap_iy ( snap ) );
   libspectrum_buffer_write_word( buffer, libspectrum_snap_ix ( snap ) );
 
-  libspectrum_buffer_write_byte( buffer, libspectrum_snap_iff2( snap ) ? 0x04 : 0x00 );
+  // Shadow registers next
+  libspectrum_buffer_write_word( buffer, libspectrum_snap_hl_ ( snap ) );
+  libspectrum_buffer_write_word( buffer, libspectrum_snap_de_ ( snap ) );
+  libspectrum_buffer_write_word( buffer, libspectrum_snap_bc_ ( snap ) );
+  libspectrum_buffer_write_byte( buffer, libspectrum_snap_f_  ( snap ) );
+  libspectrum_buffer_write_byte( buffer, libspectrum_snap_a_  ( snap ) );
 
-  libspectrum_buffer_write_byte( buffer, libspectrum_snap_r ( snap ) );
-  libspectrum_buffer_write_byte( buffer, libspectrum_snap_f ( snap ) );
-  libspectrum_buffer_write_byte( buffer, libspectrum_snap_a ( snap ) );
+  // Current registers
+  libspectrum_buffer_write_word( buffer, libspectrum_snap_hl ( snap ) );
+  libspectrum_buffer_write_word( buffer, libspectrum_snap_de ( snap ) );
+  libspectrum_buffer_write_word( buffer, libspectrum_snap_bc ( snap ) );
+  libspectrum_buffer_write_byte( buffer, libspectrum_snap_f  ( snap ) );
+  libspectrum_buffer_write_byte( buffer, libspectrum_snap_a  ( snap ) );
 
+  // Program's SP is at end of header
   libspectrum_buffer_write_word( buffer, sp );
 
-  libspectrum_buffer_write_byte( buffer, libspectrum_snap_im( snap ) );
-  libspectrum_buffer_write_byte( buffer, libspectrum_snap_out_ula( snap ) & 0x07 );
+  /* 
+    PC is stored into snapp'ed app's stack in function write_48k_dsnap()
+    libspectrum_snap_pc ( snap ); 
+
+    Not supported by this format:
+     libspectrum_buffer_write_byte( buffer, libspectrum_snap_r ( snap ) ); 
+   */
 }
 
 static libspectrum_error
