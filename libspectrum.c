@@ -513,6 +513,7 @@ libspectrum_identify_file_raw( libspectrum_id_t *type, const char *filename,
       /* Peter McGavin's Spectrum Emulator on the Amiga used .snapshot for sna
          snaps */
       { LIBSPECTRUM_ID_SNAPSHOT_SNA,  "snapshot", 3, NULL,	    0, 0, 0 },
+      { LIBSPECTRUM_ID_SNAPSHOT_DSNAP,  "s", 3, NULL,		    0, 0, 0 },
       { LIBSPECTRUM_ID_SNAPSHOT_SNP,  "snp", 3, NULL,		    0, 0, 0 },
       { LIBSPECTRUM_ID_SNAPSHOT_SP,   "sp",  3, "\x53\x50\0",	    0, 3, 1 },
       { LIBSPECTRUM_ID_SNAPSHOT_SZX,  "szx", 3, "ZXST",		    0, 4, 4 },
@@ -720,6 +721,7 @@ libspectrum_identify_class( libspectrum_class_t *libspectrum_class,
   case LIBSPECTRUM_ID_SNAPSHOT_SZX:
   case LIBSPECTRUM_ID_SNAPSHOT_Z80:
   case LIBSPECTRUM_ID_SNAPSHOT_ZXS:
+  case LIBSPECTRUM_ID_SNAPSHOT_DSNAP:
     *libspectrum_class = LIBSPECTRUM_CLASS_SNAPSHOT; return 0;
 
   case LIBSPECTRUM_ID_TAPE_TAP:

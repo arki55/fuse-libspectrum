@@ -94,6 +94,9 @@ libspectrum_snap_read( libspectrum_snap *snap, const libspectrum_byte *buffer,
   case LIBSPECTRUM_ID_SNAPSHOT_PLUSD:
     error = libspectrum_plusd_read( snap, buffer, length ); break;
 
+  case LIBSPECTRUM_ID_SNAPSHOT_DSNAP:
+    error = internal_dsnap_read( snap, buffer, length ); break;
+
   case LIBSPECTRUM_ID_SNAPSHOT_SNA:
     error = internal_sna_read( snap, buffer, length ); break;
 
@@ -161,6 +164,10 @@ libspectrum_snap_write_buffer( libspectrum_buffer *buffer, int *out_flags,
 
   case LIBSPECTRUM_ID_SNAPSHOT_SNA:
     error = libspectrum_sna_write( buffer, out_flags, snap, in_flags );
+    break;
+
+  case LIBSPECTRUM_ID_SNAPSHOT_DSNAP:
+    error = libspectrum_dsnap_write( buffer, out_flags, snap, in_flags );
     break;
 
   case LIBSPECTRUM_ID_SNAPSHOT_SZX:
