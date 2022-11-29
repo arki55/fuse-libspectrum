@@ -761,6 +761,12 @@ The available properties (along with their types) are:
 * int covox_active
 * libspectrum_byte covox_dac
 
+* int dac3ch_active
+* libspectrum_byte dac3ch_channel_a
+* libspectrum_byte dac3ch_channel_b
+* libspectrum_byte dac3ch_channel_c
+* libspectrum_byte dac3ch_control
+
 * int multiface_active;
 * int multiface_paged;
 * int multiface_model_one;

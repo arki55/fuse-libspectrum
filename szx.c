@@ -165,6 +165,7 @@ static const libspectrum_dword ZXSTBETAF_COMPRESSED = 32;
 #define ZXSTBID_GS "GS\0\0"
 #define ZXSTBID_GSRAMPAGE "GSRP"
 #define ZXSTBID_COVOX "COVX"
+#define ZCSTBID_DAC3C "DAC3"
 
 #define ZXSTBID_DOCK "DOCK"
 static const libspectrum_word ZXSTDOCKF_RAM = 2;
@@ -2738,6 +2739,10 @@ libspectrum_szx_write( libspectrum_buffer *buffer, int *out_flags,
 
   /* We don't save the Didaktik80 state at all */
   if( libspectrum_snap_didaktik80_active( snap ) )
+    *out_flags |= LIBSPECTRUM_FLAG_SNAPSHOT_MAJOR_INFO_LOSS;
+
+  /* We don't save the state of D/A converter state or channels */
+  if( libspectrum_snap_dac3ch_active( snap ) )
     *out_flags |= LIBSPECTRUM_FLAG_SNAPSHOT_MAJOR_INFO_LOSS;
 
   /* We don't save the TTX2000S state at all */
