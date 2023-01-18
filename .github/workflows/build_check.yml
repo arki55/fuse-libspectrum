@@ -28,6 +28,11 @@ jobs:
           echo "Running make .."
           make
 
-      - name: (6) Finish
+      - name: (6) Install
+        run: |
+          echo "Running make install .."
+          make install
+
+      - name: (7) Finish
         run: |
           echo "🍏 This job's status is ${{ job.status }}."
