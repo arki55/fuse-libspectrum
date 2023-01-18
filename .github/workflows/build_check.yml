@@ -1,0 +1,38 @@
+name: Fuse Libspectrum Build Checks
+run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+on: [push]
+jobs:
+  build-linux:
+    name: Build Fuse Libspectrum for Linux
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+      - run: echo "🔎 Workspace is ${{ github.workspace }} "
+
+      - name: (1) Check out repository code
+        uses: actions/checkout@v3
+
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
+
+      - name: (2) Install dependencies
+        run: echo "Installing dependencies .."
+
+      - name: (3) Autogen.sh
+        run: echo "Running autogen.sh .."
+        run: |
+          ./autogen.sh
+
+      - name: (4) Configure for linux
+        run: echo "Running configure .."
+        run: |
+          ./configure
+
+      - name: (5) Make
+        run: echo "Running make .."
+        run: |
+          make
+
+      - run: echo "🍏 This job's status is ${{ job.status }}."
