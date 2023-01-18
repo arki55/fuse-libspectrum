@@ -1,9 +1,9 @@
-name: Fuse Libspectrum Linux Build
-run-name: Build Libspectrum on Linux for user ${{ github.actor }}
+name: Fuse Libspectrum Linux Build [ +fake glib ]
+run-name: Build Libspectrum+fake glib on Linux for user ${{ github.actor }}
 on: [push]
 jobs:
   build:
-    name: Build Fuse Libspectrum for Linux
+    name: Build Fuse Libspectrum for Linux [ +fake glib ]
     runs-on: ubuntu-latest
     steps:
       - name: (1) Check out repository code
@@ -20,8 +20,8 @@ jobs:
 
       - name: (4) Configure for linux
         run: |
-          echo "Running configure .."
-          ./configure
+          echo "Running configure (fake glib) .."
+          ./configure --with-fake-glib
 
       - name: (5) Make
         run: |
