@@ -13,7 +13,6 @@ jobs:
 
       - name: (1) Check out repository code
         uses: actions/checkout@v3
-
       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
 
@@ -21,19 +20,18 @@ jobs:
         run: echo "Installing dependencies .."
 
       - name: (3) Autogen.sh
-        run: echo "Running autogen.sh .."
         run: |
+          echo "Running autogen.sh .."
           ./autogen.sh
 
       - name: (4) Configure for linux
-        run: echo "Running configure .."
         run: |
+          echo "Running configure .."
           ./configure
 
       - name: (5) Make
-        run: echo "Running make .."
         run: |
+          echo "Running make .."
           make
-
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
