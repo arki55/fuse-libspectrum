@@ -1,5 +1,5 @@
-name: Fuse Libspectrum Build Checks
-run-name: Build checks for user ${{ github.actor }}
+name: Fuse Libspectrum Linux Build
+run-name: Build Libspectrum on Linux for user ${{ github.actor }}
 on: [push]
 jobs:
   build-linux:
@@ -35,4 +35,4 @@ jobs:
 
       - name: (7) Finish
         run: |
-          echo "🍏 This job's status is ${{ job.status }}."
+          echo "🍏 Finishing with status ${{ job.status }}."
