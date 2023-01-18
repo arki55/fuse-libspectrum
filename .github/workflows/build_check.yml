@@ -28,10 +28,10 @@ jobs:
           echo "Running make .."
           make
 
-      - name: (6) Install
+      - name: (6) Install (+sudo)
         run: |
           echo "Running make install .."
-          make install
+          sudo make install
 
       - name: (7) Finish
         run: |
