@@ -3,35 +3,45 @@ run-name: Build Libspectrum+fake glib on Windows for user ${{ github.actor }}
 on: [push]
 jobs:
   build:
-    name: Build Fuse Libspectrum for Windows [ +fake glib ]
+    name: Build Fuse Libspectrum for Cygwin [ +fake glib ]
     runs-on: windows-latest
     steps:
       - name: (1) Check out repository code
         uses: actions/checkout@v3
 
-      - name: (2) Install dependencies
-        run: |
-          echo "Installing dependencies .."
+      - name: (2) Setup Cygwin with libs
+        uses: egor-tensin/setup-cygwin@v4
+        with:
+          packages: cmake gcc 
 
       - name: (3) Autogen.sh
         run: |
           echo "Running autogen.sh .."
           ./autogen.sh
+        shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
 
       - name: (4) Configure for Windows
         run: |
           echo "Running configure (fake glib) .."
-          ./configure --disable-static --with-fake-glib
+          ./configure \
+              --build=i686-pc-cygwin \
+              --host=i686-w64-mingw32 \
+              --prefix=/usr/local/i686-w64-mingw32 \
+              --disable-static \
+              --with-fake-glib
+        shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
 
       - name: (5) Make
         run: |
           echo "Running make .."
           make
+        shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
 
       - name: (6) Install
         run: |
-          echo "Running make install .."
+          echo "Running make install-strip .."
           sudo make install-strip
+        shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
 
       - name: (7) Finish
         run: |
