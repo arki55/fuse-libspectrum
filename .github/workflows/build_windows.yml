@@ -1,9 +1,9 @@
 name: Fuse Libspectrum Windows Build [ +fake glib ]
-run-name: Build Libspectrum+fake glib on Windows for user ${{ github.actor }}
+run-name: Build Libspectrum+fake glib for Windows / ${{ github.actor }} /
 on: [push]
 jobs:
   build:
-    name: Build Fuse Libspectrum for Cygwin [ +fake glib ]
+    name: Build Fuse Libspectrum with Cygwin [ +fake glib ]
     runs-on: windows-latest
     steps:
       - name: (1) Check out repository code

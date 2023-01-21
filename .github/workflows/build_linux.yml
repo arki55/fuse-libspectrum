@@ -1,5 +1,5 @@
 name: Fuse Libspectrum Linux Build
-run-name: Build Libspectrum on Linux for user ${{ github.actor }}
+run-name: Build Libspectrum for Linux / ${{ github.actor }} /
 on: [push]
 jobs:
   build:
