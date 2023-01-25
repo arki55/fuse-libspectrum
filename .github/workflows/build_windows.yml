@@ -38,24 +38,22 @@ jobs:
             pkg-config
 
       - name: (4) Autogen.sh
-        run: ./autogen.sh
-        shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
+        run: bash ./autogen.sh
 
       - name: (5) Configure for Windows
-        run: ./configure \
+        run: bash ./configure \
               --build=i686-pc-cygwin \
               --host=i686-w64-mingw32 \
               --prefix=/usr/local/i686-w64-mingw32 \
               --disable-static \
               --with-fake-glib
-        shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
 
       - name: (6) Make
-        run: make
+        run: bash make
         shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
 
       - name: (7) Install
-        run: sudo make install-strip
+        run: bash sudo make install-strip
         shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
 
       - name: (8) Finish
