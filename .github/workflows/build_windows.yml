@@ -38,10 +38,10 @@ jobs:
             pkg-config
 
       - name: (4) Autogen.sh
-        run: bash ./autogen.sh
+        run: ./autogen.sh
 
       - name: (5) Configure for Windows
-        run: bash ./configure \
+        run: ./configure \
               --build=i686-pc-cygwin \
               --host=i686-w64-mingw32 \
               --prefix=/usr/local/i686-w64-mingw32 \
@@ -49,10 +49,10 @@ jobs:
               --with-fake-glib
 
       - name: (6) Make
-        run: bash make
+        run: make
 
       - name: (7) Install
-        run: bash sudo make install-strip
+        run: sudo make install-strip
 
       - name: (8) Finish
         run: |
