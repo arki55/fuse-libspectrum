@@ -48,7 +48,8 @@ jobs:
               --host=i686-w64-mingw32 \
               --prefix=/usr/local/i686-w64-mingw32 \
               --disable-static \
-              --with-fake-glib
+              --with-fake-glib \
+              | tee ./configure.out
 
       - name: (6) Verify output from configure
         run: |
