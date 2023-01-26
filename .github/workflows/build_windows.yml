@@ -51,7 +51,7 @@ jobs:
               --with-fake-glib
 
       - name: (6) Verify output from configure
-        run: bash |
+        run: |
           message1="Internal GLib replacement: yes"
           echo "Looking for line '$message1' .."
           lines1=(`cat "./configure.out" | grep -c "$message1"`)
@@ -60,6 +60,7 @@ jobs:
             exit 1
           fi
           echo "Line '$message1' was found."
+        shell: bash
 
       - name: (7) Make
         run: make

@@ -37,6 +37,7 @@ jobs:
             exit 1
           fi
           echo "Line '$message1' was found."
+        shell: bash
 
       - name: (6) Make
         run: |
