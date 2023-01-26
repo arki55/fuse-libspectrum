@@ -65,7 +65,7 @@ jobs:
         run: |
           echo "Bulding and running tests .."
           ## make check  <-- cross compiled, cannot execute under Linux
-          echo "FIXME: make check not possible, cross compiled.
+          echo "FIXME: make check not possible, cross compiled."
         shell: bash
 
       - name: (9) Finish
