@@ -56,6 +56,9 @@ jobs:
       - name: (7) Install
         run: make install-strip
 
-      - name: (8) Finish
+      - name: (8) Run tests
+        run: make check
+
+      - name: (9) Finish
         run: |
           echo "🍏 Finishing with status ${{ job.status }}."

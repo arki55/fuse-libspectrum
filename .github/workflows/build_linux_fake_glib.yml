@@ -33,6 +33,11 @@ jobs:
           echo "Running make install .."
           sudo make install
 
-      - name: (7) Finish
+      - name: (7) Run tests
+        run: |
+          echo "Bulding and running tests .."
+          make check
+
+      - name: (8) Finish
         run: |
           echo "🍏 Finishing with status ${{ job.status }}."
