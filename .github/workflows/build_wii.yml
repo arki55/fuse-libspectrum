@@ -16,6 +16,7 @@ jobs:
           echo "Using devkitpro/devkitppc image"
           
           echo "Installing libs for wii development .."
+          sudo dkp-pacman -S --needed --noconfirm --quiet devkitpro-pkgbuild-helpers
           sudo dkp-pacman -S --noconfirm wii-dev
           
           echo "Applying new rules from profile.d .."
