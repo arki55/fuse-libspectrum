@@ -31,7 +31,7 @@ jobs:
       - name: (4) Configure for WII (fake glib)
         run: |
           echo "Running configure for WII .."
-          ./configure --target=powerpc-gekko --host=powerpc-gekko \
+          ./configure --target=powerpc-eabi --host=powerpc-eabi \
             --prefix=$DEVKITPPC \
             --without-libgcrypt --with-fake-glib --without-libaudiofile \
             | tee ./configure.out
