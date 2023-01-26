@@ -15,7 +15,7 @@ jobs:
           echo "Installing dependencies .."
           echo "Using devkitpro/devkitppc image, all should be set up."
           
-          sudo pacman -S wii-dev
+          sudo dkp-pacman -S wii-dev
           
         shell: bash
 
