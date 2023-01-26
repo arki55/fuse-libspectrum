@@ -17,7 +17,9 @@ jobs:
 
       - name: (3) Autogen.sh
         run: |
-          echo "(not) Running autogen.sh .."
+          echo "Running autogen.sh .."
+          ./autogen.sh
+        shell: bash
 
       - name: (4) Configure for WII (fake glib)
         run: |
