@@ -6,8 +6,6 @@ jobs:
     name: Build Fuse Libspectrum for WII
     runs-on: ubuntu-latest
     container: devkitpro/devkitppc
-    env:
-      PATH: $DEVKITPPC/bin:$PATH
     steps:
       - name: (1) Check out repository code
         uses: actions/checkout@v3
@@ -16,6 +14,9 @@ jobs:
         run: |
           echo "Installing dependencies .."
           echo "Using devkitpro/devkitppc image, all should be set up."
+          echo "Path is: $PATH"
+          export PATH=$DEVKITPPC/bin:$PATH
+          echo "Path set to: $PATH"
 
       - name: (3) Autogen.sh
         run: |
