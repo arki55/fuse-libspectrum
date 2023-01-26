@@ -5,30 +5,15 @@ jobs:
   build:
     name: Build Fuse Libspectrum for WII
     runs-on: ubuntu-latest
+    container: devkitpro/devkitppc
     steps:
       - name: (1) Check out repository code
         uses: actions/checkout@v3
 
       - name: (2) Install dependencies
         run: |
-          echo "Installing dependencies (pacman, devkitPro stuff) .."
-          
-          ## https://devkitpro.org/wiki/devkitPro_pacman
-          sudo apt-get install -y pacman
-          
-          DEVKITPRO=/opt/devkitpro
-          DEVKITARM=/opt/devkitpro/devkitARM
-          DEVKITPPC=/opt/devkitpro/devkitPPC
-          
-          sudo pacman-key --recv BC26F752D25B92CE272E0F44F7FD5492264BB9D0 --keyserver keyserver.ubuntu.com
-          sudo pacman-key --lsign BC26F752D25B92CE272E0F44F7FD5492264BB9D0
-          
-          wget https://pkg.devkitpro.org/devkitpro-keyring.pkg.tar.xz
-          
-          cat "\n[dkp-libs]\nServer = https://pkg.devkitpro.org/packages\n" | tee -a /etc/pacman.conf
-          cat "\n[dkp-linux]\nServer = https://pkg.devkitpro.org/packages/linux/$arch/\n" | tee -a /etc/pacman.conf
-          
-          sudo pacman -Syu
+          echo "Installing dependencies .."
+          echo "Using devkitpro/devkitppc image, all should be set up."
           
           sudo pacman -S wii-dev
           
