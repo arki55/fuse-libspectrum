@@ -1,43 +1,57 @@
 name: Fuse Libspectrum Linux Build
-run-name: Build Libspectrum for Linux / ${{ github.actor }} /
+run-name: Build and test Libspectrum for Linux / ${{ github.actor }} /
 on: [push]
 jobs:
   build:
     name: Build Fuse Libspectrum for Linux
     runs-on: ubuntu-latest
     steps:
-      - name: (1) Check out repository code
+      - name: (1) Prepare git
+        run: |
+          echo "Not needed in this build"
+
+      - name: (2) Check out repository code
         uses: actions/checkout@v3
 
-      - name: (2) Install dependencies
+      - name: (3) Install dependencies
         run: |
           echo "Installing dependencies .."
+          echo "No dependencies in this build"
 
-      - name: (3) Autogen.sh
+      - name: (4) Autogen.sh
         run: |
           echo "Running autogen.sh .."
           ./autogen.sh
 
-      - name: (4) Configure for linux
+      - name: (5) Configure for linux (real glib)
         run: |
           echo "Running configure .."
-          ./configure
+          ./configure | tee ./configure.out
 
-      - name: (5) Make
+      - name: (6) Verify output from configure
+        run: |
+          message1="Internal GLib replacement: no"
+          lines1=(`cat "./configure.out" | grep -c "$message1"`)
+          if [[ "$lines1" -ne "1" ]]; then
+            echo "Error: Message $message1 not found!"
+            exit 1
+          fi
+
+      - name: (7) Make
         run: |
           echo "Running make .."
           make
 
-      - name: (6) Install (+sudo)
+      - name: (8) Install (+sudo)
         run: |
           echo "Running make install .."
           sudo make install
 
-      - name: (7) Run tests
+      - name: (9) Run tests
         run: |
           echo "Bulding and running tests .."
           make check
 
-      - name: (8) Finish
+      - name: (10) Finish
         run: |
           echo "🍏 Finishing with status ${{ job.status }}."
