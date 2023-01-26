@@ -54,7 +54,7 @@ jobs:
         run: make
 
       - name: (7) Install
-        run: sudo make install-strip
+        run: make install-strip
 
       - name: (8) Finish
         run: |
