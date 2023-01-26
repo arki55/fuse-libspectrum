@@ -14,6 +14,10 @@ jobs:
         run: |
           echo "Installing dependencies .."
           echo "Using devkitpro/devkitppc image"
+          sudo apt-get update
+          sudo apt-get -y install --no-install-recommends \
+            wget tar autoconf automake libtool && \
+          sudo rm -rf /var/lib/apt/lists/*
           echo "Done."
           
         shell: bash
