@@ -17,6 +17,7 @@ jobs:
           echo "Path is: $PATH"
           export PATH=$DEVKITPPC/bin:$PATH
           echo "Path set to: $PATH"
+          sudo apt-get install -y autoreconf
 
       - name: (3) Autogen.sh
         run: |
