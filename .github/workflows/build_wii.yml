@@ -6,6 +6,8 @@ jobs:
     name: Build Fuse Libspectrum for WII
     runs-on: ubuntu-latest
     container: devkitpro/devkitppc
+    env:
+      PATH: $DEVKITPPC/bin:$PATH
     steps:
       - name: (1) Check out repository code
         uses: actions/checkout@v3
