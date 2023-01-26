@@ -14,10 +14,10 @@ jobs:
         run: |
           echo "Installing dependencies .."
           echo "Using devkitpro/devkitppc image, all should be set up."
-          echo "Path is: $PATH"
+          echo "Path was: $PATH"
           export PATH=$DEVKITPPC/bin:$PATH
           echo "Path set to: $PATH"
-          sudo apt-get install -y autoreconf
+          sudo apt-get install -y autoconf
 
       - name: (3) Autogen.sh
         run: |
