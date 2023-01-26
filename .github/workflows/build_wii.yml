@@ -26,6 +26,7 @@ jobs:
             --prefix=$DEVKITPPC \
             --without-libgcrypt --with-fake-glib --without-libaudiofile \
             | tee ./configure.out
+        shell: bash
 
       - name: (5) Verify output from configure
         run: |
@@ -43,16 +44,19 @@ jobs:
         run: |
           echo "Running make .."
           make
+        shell: bash
 
       - name: (7) Install (+sudo)
         run: |
           echo "Running make install .."
           sudo make install
+        shell: bash
 
       - name: (8) Run tests
         run: |
           echo "Bulding and running tests .."
           make check
+        shell: bash
 
       - name: (9) Finish
         run: |
