@@ -51,10 +51,10 @@ jobs:
               --with-fake-glib
 
       - name: (6) Make
-        run: bash make
+        run: make
 
       - name: (7) Install
-        run: bash sudo make install-strip
+        run: sudo make install-strip
 
       - name: (8) Finish
         run: |
