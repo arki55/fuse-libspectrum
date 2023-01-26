@@ -31,10 +31,10 @@ jobs:
       - name: (6) Verify output from configure
         run: |
           message1="Internal GLib replacement: no"
-          echo "Looking for line '$message1' ..
+          echo "Looking for line '$message1' .."
           lines1=(`cat "./configure.out" | grep -c "$message1"`)
           if [[ "$lines1" -ne "1" ]]; then
-            echo "Error: Message $message1 not found!"
+            echo "Error: Line $message1 not found!"
             exit 1
           fi
           echo "Line '$message1' was found."
