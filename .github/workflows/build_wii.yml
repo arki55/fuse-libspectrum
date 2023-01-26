@@ -13,9 +13,15 @@ jobs:
       - name: (2) Install dependencies
         run: |
           echo "Installing dependencies .."
-          echo "Using devkitpro/devkitppc image, all should be set up."
+          echo "Using devkitpro/devkitppc image"
           
-          sudo dkp-pacman -S wii-dev
+          echo "Installing libs for wii development .."
+          sudo dkp-pacman -S --noconfirm wii-dev
+          
+          echo "Applying new rules from profile.d .."
+          source /etc/profile.d/devkit-env.sh
+          
+          echo "Done."
           
         shell: bash
 
