@@ -14,16 +14,6 @@ jobs:
         run: |
           echo "Installing dependencies .."
           echo "Using devkitpro/devkitppc image"
-          
-          echo "Installing libs for wii development .."
-          sudo dkp-pacman -Syu
-          sudo dkp-pacman -S --needed --noconfirm dkp-toolchain-vars
-          sudo dkp-pacman -S --needed --noconfirm cmake
-          sudo dkp-pacman -S --needed --noconfirm wii-dev
-          
-          echo "Applying new rules from profile.d .."
-          source /etc/profile.d/devkit-env.sh
-          
           echo "Done."
           
         shell: bash
