@@ -66,27 +66,12 @@ jobs:
       - name: (8) Install
         run: make install-strip
 
-      - run: ls -la ./
-        shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
-      - run: ls /
-        shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
-      - run: ls /usr/
-        shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
-      - run: ls /usr/i686-w64-mingw32/
-        shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
-      - run: ls /usr/i686-w64-mingw32/sys-root/
-        shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
-      - run: ls /usr/i686-w64-mingw32/sys-root/mingw/
-        shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
-      - run: ls /usr/i686-w64-mingw32/sys-root/mingw/bin/
-        shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
-
       - name: (9) Run tests
         run: |
           cd ${GITHUB_WORKSPACE}
-          cp -f /usr/i686-w64-mingw32/sys-root/mingw/bin/libbz2-1.dll ./
-          cp -f /usr/i686-w64-mingw32/sys-root/mingw/bin/libgcc_s_sjlj-1.dll ./
-          cp -f /usr/i686-w64-mingw32/sys-root/mingw/bin/libwinpthread-1.dll ./
+          cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libbz2-1.dll .
+          cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libgcc_s_sjlj-1.dll .
+          cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libwinpthread-1.dll .
           make check
         shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
 
