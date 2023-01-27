@@ -47,6 +47,15 @@ jobs:
           echo "Bulding and running tests .."
           make check
 
-      - name: (10) Finish
+      - name: (10) Upload generated files
+        uses: actions/upload-artifact@v3
+        with: 
+          name: libspectrum-linux-fake-glib
+          path: |
+            doc/libspectrum.3
+            libspectrum.h
+            libspectrum.pc
+
+      - name: (11) Finish
         run: |
           echo "🍏 Finishing with status ${{ job.status }}."

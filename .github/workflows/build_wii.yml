@@ -61,6 +61,15 @@ jobs:
           echo "FIXME: make check not possible, cross compiled."
         shell: bash
 
-      - name: (9) Finish
+      - name: (10) Upload generated files
+        uses: actions/upload-artifact@v3
+        with: 
+          name: libspectrum-wii
+          path: |
+            doc/libspectrum.3
+            libspectrum.h
+            libspectrum.pc
+
+      - name: (10) Finish
         run: |
           echo "🍏 Finishing with status ${{ job.status }}."
