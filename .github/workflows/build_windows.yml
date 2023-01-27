@@ -43,13 +43,14 @@ jobs:
         run: bash ./autogen.sh
 
       - name: (5) Configure for Windows (fake glib)
-        run: bash ./configure \
+        run: ./configure \
               --build=i686-pc-cygwin \
               --host=i686-w64-mingw32 \
               --prefix=/usr/local/i686-w64-mingw32 \
               --disable-static \
               --with-fake-glib \
               | tee ./configure.out
+        shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
 
       - name: (6) Verify output from configure
         run: |
