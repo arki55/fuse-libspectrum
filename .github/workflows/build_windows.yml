@@ -68,10 +68,12 @@ jobs:
 
       - name: (9) Run tests
         run: |
+          echo "Copying some dlls.."
           cd ${GITHUB_WORKSPACE}
           cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libbz2-1.dll .
           cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libgcc_s_sjlj-1.dll .
           cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libwinpthread-1.dll .
+          echo "Running make check.."
           make check
         shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
 
