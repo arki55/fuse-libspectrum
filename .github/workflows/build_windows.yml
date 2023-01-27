@@ -66,13 +66,20 @@ jobs:
       - name: (8) Install
         run: make install-strip
 
-      - run: bash ls -la ./
-      - run: bash ls /
-      - run: bash ls /usr/
-      - run: bash ls /usr/i686-w64-mingw32/
-      - run: bash ls /usr/i686-w64-mingw32/sys-root/
-      - run: bash ls /usr/i686-w64-mingw32/sys-root/mingw/
-      - run: bash ls /usr/i686-w64-mingw32/sys-root/mingw/bin/
+      - run: ls -la ./
+        shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
+      - run: ls /
+        shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
+      - run: ls /usr/
+        shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
+      - run: ls /usr/i686-w64-mingw32/
+        shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
+      - run: ls /usr/i686-w64-mingw32/sys-root/
+        shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
+      - run: ls /usr/i686-w64-mingw32/sys-root/mingw/
+        shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
+      - run: ls /usr/i686-w64-mingw32/sys-root/mingw/bin/
+        shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
 
       - name: (9) Run tests
         run: |
