@@ -66,6 +66,14 @@ jobs:
       - name: (8) Install
         run: make install-strip
 
+      - run: bash ls -la ./
+      - run: bash ls /
+      - run: bash ls /usr/
+      - run: bash ls /usr/i686-w64-mingw32/
+      - run: bash ls /usr/i686-w64-mingw32/sys-root/
+      - run: bash ls /usr/i686-w64-mingw32/sys-root/mingw/
+      - run: bash ls /usr/i686-w64-mingw32/sys-root/mingw/bin/
+
       - name: (9) Run tests
         run: |
           cd ${GITHUB_WORKSPACE}
