@@ -61,7 +61,7 @@ jobs:
             exit 1
           fi
           echo "Line '$message1' was found."
-        shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
+        shell: C:\tools\cygwin\bin\bash.exe "--login --norc -eo pipefail -o igncr '{0}'"
 
       - name: (7) Make
         run: make
