@@ -39,14 +39,7 @@ jobs:
 
       - name: (5) Verify output from configure
         run: |
-          message1="Internal GLib replacement: yes"
-          echo "Looking for line '$message1' .."
-          lines1=(`cat "./configure.out" | grep -c "$message1"`)
-          if [[ "$lines1" -ne "1" ]]; then
-            echo "Error: Line $message1 not found!"
-            exit 1
-          fi
-          echo "Line '$message1' was found."
+          .github/scripts/in_config.sh "Internal GLib replacement: yes"
         shell: bash
 
       - name: (6) Make

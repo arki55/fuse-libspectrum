@@ -57,14 +57,7 @@ jobs:
       - name: (6) Verify output from configure
         run: |
           cd ${GITHUB_WORKSPACE}
-          message1="Internal GLib replacement: yes"
-          echo "Looking for line '$message1' .."
-          lines1=(`cat "./configure.out" | grep -c "$message1"`)
-          if [[ "$lines1" -ne "1" ]]; then
-            echo "Error: Line $message1 not found!"
-            exit 1
-          fi
-          echo "Line '$message1' was found."
+          .github/scripts/in_config.sh "Internal GLib replacement: yes"
         shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
 
       - name: (7) Make
@@ -74,7 +67,13 @@ jobs:
         run: make install-strip
 
       - name: (9) Run tests
-        run: make check
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          cp -f /usr/i686-w64-mingw32/sys-root/mingw/bin/libbz2-1.dll ./
+          cp -f /usr/i686-w64-mingw32/sys-root/mingw/bin/libgcc_s_sjlj-1.dll ./
+          cp -f /usr/i686-w64-mingw32/sys-root/mingw/bin/libwinpthread-1.dll ./
+          make check
+        shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
 
       - name: (10) Finish
         run: |
