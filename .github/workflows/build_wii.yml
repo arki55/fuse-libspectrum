@@ -1,5 +1,5 @@
 name: Libspectrum for WII
-run-name: Build and test Libspectrum for WII [ +fake glib, -zlib, -bzip2, -libaudiofile, -libgcrypt ] / ${{ github.actor }} /
+run-name: Build and test Libspectrum for WII [ +fake glib, no libs ] / ${{ github.actor }} /
 on: [push]
 jobs:
   build:
@@ -41,8 +41,8 @@ jobs:
       - name: (5) Verify output from configure
         run: |
           .github/scripts/in_config.sh "libspectrum is ready to be compiled"
-          .github/scripts/in_config.sh "zlib support: yes"
-          .github/scripts/in_config.sh "bzip2 support: yes"
+          .github/scripts/in_config.sh "zlib support: no"
+          .github/scripts/in_config.sh "bzip2 support: no"
           .github/scripts/in_config.sh "libgcrypt support: no"
           .github/scripts/in_config.sh "libaudiofile support: no"
           .github/scripts/in_config.sh "Internal GLib replacement: yes"
