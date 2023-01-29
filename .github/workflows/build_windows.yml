@@ -1,9 +1,9 @@
-name: Fuse Libspectrum Windows Build [ +fake glib, -libaudiofile ]
-run-name: Build Libspectrum+fake glib for Windows / ${{ github.actor }} /
+name: Libspectrum for Windows / ${{ github.actor }} /
+run-name: Build and test Libspectrum for Windows [ +fake glib, -libaudiofile ]
 on: [push]
 jobs:
   build:
-    name: Build
+    name: Build & Test
     runs-on: windows-latest
     timeout-minutes: 15
     env:

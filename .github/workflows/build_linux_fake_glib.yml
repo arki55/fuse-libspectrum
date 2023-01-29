@@ -1,9 +1,9 @@
-name: Fuse Libspectrum Linux Build [ +fake glib ]
-run-name: Build Libspectrum+fake glib for Linux / ${{ github.actor }} /
+name: Libspectrum for Linux (2) / ${{ github.actor }} /
+run-name: Build and test Libspectrum for Linux (2) [ all libs, fake glib ]
 on: [push]
 jobs:
   build:
-    name: Build
+    name: Build & Test
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
