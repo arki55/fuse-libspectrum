@@ -5,6 +5,7 @@ jobs:
   build:
     name: Build Fuse Libspectrum for WII
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     container: devkitpro/devkitppc
     steps:
       - name: (1) Check out repository code

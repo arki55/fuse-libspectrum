@@ -5,6 +5,7 @@ jobs:
   build:
     name: Build Fuse Libspectrum with Cygwin [ +fake glib ]
     runs-on: windows-latest
+    timeout-minutes: 15
     env:
       CYGWIN_NOWINPATH: 1
     steps:
