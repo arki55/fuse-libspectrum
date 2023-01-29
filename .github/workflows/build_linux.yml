@@ -1,9 +1,9 @@
-name: Fuse Libspectrum Linux Build
+name: Fuse Libspectrum Linux Build (default)
 run-name: Build and test Libspectrum for Linux / ${{ github.actor }} /
 on: [push]
 jobs:
   build:
-    name: Build Fuse Libspectrum for Linux
+    name: Build
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -17,7 +17,7 @@ jobs:
       - name: (3) Install dependencies
         run: |
           echo "Installing dependencies .."
-          echo "No dependencies in this build"
+          sudo apt install -y libaudiofile-dev
 
       - name: (4) Autogen.sh
         run: |
@@ -31,6 +31,11 @@ jobs:
 
       - name: (6) Verify output from configure
         run: |
+          .github/scripts/in_config.sh "libspectrum is ready to be compiled"
+          .github/scripts/in_config.sh "zlib support: yes"
+          .github/scripts/in_config.sh "bzip2 support: yes"
+          .github/scripts/in_config.sh "libgcrypt support: yes"
+          .github/scripts/in_config.sh "libaudiofile support: yes"
           .github/scripts/in_config.sh "Internal GLib replacement: no"
 
       - name: (7) Make

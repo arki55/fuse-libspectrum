@@ -1,9 +1,9 @@
-name: Fuse Libspectrum Windows Build [ +fake glib ]
+name: Fuse Libspectrum Windows Build [ +fake glib, -libaudiofile ]
 run-name: Build Libspectrum+fake glib for Windows / ${{ github.actor }} /
 on: [push]
 jobs:
   build:
-    name: Build Fuse Libspectrum with Cygwin [ +fake glib ]
+    name: Build
     runs-on: windows-latest
     timeout-minutes: 15
     env:
@@ -58,6 +58,11 @@ jobs:
       - name: (6) Verify output from configure
         run: |
           cd ${GITHUB_WORKSPACE}
+          .github/scripts/in_config.sh "libspectrum is ready to be compiled"
+          .github/scripts/in_config.sh "zlib support: yes"
+          .github/scripts/in_config.sh "bzip2 support: yes"
+          .github/scripts/in_config.sh "libgcrypt support: yes"
+          .github/scripts/in_config.sh "libaudiofile support: no"
           .github/scripts/in_config.sh "Internal GLib replacement: yes"
         shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
 

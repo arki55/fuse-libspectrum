@@ -3,7 +3,7 @@ run-name: Build Libspectrum+fake glib for Linux / ${{ github.actor }} /
 on: [push]
 jobs:
   build:
-    name: Build Fuse Libspectrum for Linux [ +fake glib ]
+    name: Build
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -31,6 +31,11 @@ jobs:
 
       - name: (6) Verify output from configure
         run: |
+          .github/scripts/in_config.sh "libspectrum is ready to be compiled"
+          .github/scripts/in_config.sh "zlib support: yes"
+          .github/scripts/in_config.sh "bzip2 support: yes"
+          .github/scripts/in_config.sh "libgcrypt support: yes"
+          .github/scripts/in_config.sh "libaudiofile support: yes"
           .github/scripts/in_config.sh "Internal GLib replacement: yes"
 
       - name: (7) Make

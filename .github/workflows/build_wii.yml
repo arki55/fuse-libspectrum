@@ -1,9 +1,9 @@
-name: Fuse Libspectrum WII Build
+name: Fuse Libspectrum WII Build [ +fake glib, -libaudiofile, -libgcrypt ]
 run-name: Build Libspectrum for WII / ${{ github.actor }} /
 on: [push]
 jobs:
   build:
-    name: Build Fuse Libspectrum for WII
+    name: Build
     runs-on: ubuntu-latest
     timeout-minutes: 15
     container: devkitpro/devkitppc
@@ -40,6 +40,11 @@ jobs:
 
       - name: (5) Verify output from configure
         run: |
+          .github/scripts/in_config.sh "libspectrum is ready to be compiled"
+          .github/scripts/in_config.sh "zlib support: yes"
+          .github/scripts/in_config.sh "bzip2 support: yes"
+          .github/scripts/in_config.sh "libgcrypt support: no"
+          .github/scripts/in_config.sh "libaudiofile support: no"
           .github/scripts/in_config.sh "Internal GLib replacement: yes"
         shell: bash
 
