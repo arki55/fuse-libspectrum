@@ -1,5 +1,5 @@
-name: Libspectrum for Windows / ${{ github.actor }} /
-run-name: Build and test Libspectrum for Windows [ +fake glib, -libaudiofile ]
+name: Libspectrum for Windows
+run-name: Build and test Libspectrum for Windows [ +fake glib, -libaudiofile ] / ${{ github.actor }} /
 on: [push]
 jobs:
   build:

@@ -1,5 +1,5 @@
-name: Libspectrum for WII / ${{ github.actor }} /
-run-name: Build and test Libspectrum for WII [ +fake glib, -zlib, -bzip2, -libaudiofile, -libgcrypt ]
+name: Libspectrum for WII
+run-name: Build and test Libspectrum for WII [ +fake glib, -zlib, -bzip2, -libaudiofile, -libgcrypt ] / ${{ github.actor }} /
 on: [push]
 jobs:
   build:

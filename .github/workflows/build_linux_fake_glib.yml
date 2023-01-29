@@ -1,5 +1,5 @@
-name: Libspectrum for Linux (2) / ${{ github.actor }} /
-run-name: Build and test Libspectrum for Linux (2) [ all libs, fake glib ]
+name: Libspectrum for Linux (2)
+run-name: Build and test Libspectrum for Linux (2) [ all libs, fake glib ] / ${{ github.actor }} /
 on: [push]
 jobs:
   build:
