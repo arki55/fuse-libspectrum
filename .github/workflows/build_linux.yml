@@ -14,7 +14,7 @@ on:
       branch:
         type: string
         required: false
-      # Repo is taken from env.LIBSPECTRUM_REPO, cannot be passed as input.
+      # Repo is taken from var.LIBSPECTRUM_REPO, cannot be passed as input.
 
 jobs:
   build:
@@ -27,8 +27,9 @@ jobs:
         working-directory: ${{ inputs.path || '.' }}
     env:
       # Support push and call triggers, set env.variables
-      libspectrum_branch: ${{ inputs.branch || '' }}
-      libspectrum_path: ${{ inputs.path || '.' }}
+      LIBSPECTRUM_REPO: ${{ vars.LIBSPECTRUM_REPO || '' }}
+      LIBSPECTRUM_BRANCH: ${{ inputs.branch || '' }}
+      LIBSPECTRUM_PATH: ${{ inputs.path || '.' }}
     steps:
       - name: (1) Prepare environment
         run: |
@@ -36,16 +37,16 @@ jobs:
           pwd
           ls -la
           
-          echo "Libspectrum repo: ${{ env.LIBSPECTRUM_REPO }}"
-          echo "Libspectrum branch: ${{ env.libspectrum_branch }}"
-          echo "Libspectrum path: ${{ env.libspectrum_path }}"
+          echo "Libspectrum repo: $LIBSPECTRUM_REPO"
+          echo "Libspectrum branch: $LIBSPECTRUM_BRANCH"
+          echo "Libspectrum path: $LIBSPECTRUM_PATH"
 
       - name: (2) Check out repository code
         uses: actions/checkout@v3
         with:
           repository: ${{ env.LIBSPECTRUM_REPO }}
-          ref: ${{ env.libspectrum_branch }}
-          path: ${{ env.libspectrum_path }}
+          ref: ${{ env.LIBSPECTRUM_BRANCH }}
+          path: ${{ env.LIBSPECTRUM_PATH }}
 
       - name: (3) Install dependencies
         run: |
