@@ -39,9 +39,9 @@ jobs:
           pwd
           ls -la
           
-          echo "Libspectrum repo: ${ libspectrum_repo }}"
-          echo "Libspectrum branch: ${ libspectrum_branch }}"
-          echo "Libspectrum path: ${ libspectrum_path }}"
+          echo "Libspectrum repo: ${{ env.libspectrum_repo }}"
+          echo "Libspectrum branch: ${{ env.libspectrum_branch }}"
+          echo "Libspectrum path: ${{ env.libspectrum_path }}"
 
       - name: (2) Check out repository code
         uses: actions/checkout@v3
