@@ -14,8 +14,8 @@ on:
       branch:
         type: string
         required: false
-    secrets:
-      LIBSPECTRUM_REPO:
+      repo:
+        type: string
         required: true
 
 jobs:
@@ -29,7 +29,7 @@ jobs:
         working-directory: ${{ inputs.path || '.' }}
     env:
       # Support push and call triggers, set env.variables
-      libspectrum_repo: ${{ secrets.LIBSPECTRUM_REPO || '' }}
+      libspectrum_repo: ${{ inputs.repo || '' }}
       libspectrum_branch: ${{ inputs.branch || '' }}
       libspectrum_path: ${{ inputs.path || '.' }}
     steps:
