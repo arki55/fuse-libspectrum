@@ -97,8 +97,7 @@ jobs:
           name: libspectrum-linux
           path: |
             doc/libspectrum.3
-            libspectrum.h
-            libspectrum.pc
+            libspectrum.*
 
       - name: (11) Finish
         run: |
