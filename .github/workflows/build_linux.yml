@@ -79,7 +79,7 @@ jobs:
           echo "Running make .."
           make
 
-      - name: (8) Install (+sudo)
+      - name: (8) Install
         run: |
           echo "Running make install .."
           sudo make install
@@ -91,7 +91,13 @@ jobs:
 
       - name: (10) Upload generated files
         # Need to pack files to maintain permissions (+x mainly)
-        run: tar -cvzf libspectrum-compiled-linux.tar.gz .
+        run: tar -cvzf \
+          libspectrum-compiled-linux.tar.gz \
+          --exclude=.git \
+          --exclude=libspectrum-compiled-linux.tar \
+          --exclude=libspectrum-compiled-linux.tar.gz \
+          .
+
       - uses: actions/upload-artifact@v3
         with: 
           name: libspectrum-compiled-linux
