@@ -91,9 +91,10 @@ jobs:
 
       - name: (10) Upload generated files
         # Need to pack files to maintain permissions (+x mainly)
-        run: tar -cvzf \
+        run: |
+          tar -cvzf \
           libspectrum-compiled-linux.tar.gz \
-          --exclude=./.git \
+          --exclude=.git \
           --exclude=*.tar \
           .
 
