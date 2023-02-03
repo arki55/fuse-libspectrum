@@ -94,8 +94,8 @@ jobs:
         run: |
           tar -cvzf \
           libspectrum-compiled-linux.tar.gz \
-          --exclude=.git \
-          --exclude=*.tar \
+          --exclude=".git" \
+          --ignore-failed-read
           .
 
       - uses: actions/upload-artifact@v3
