@@ -93,7 +93,8 @@ jobs:
         uses: actions/upload-artifact@v3
         with: 
           name: libspectrum-compiled-linux
-          path: *
+          path: |
+            **
 
       - name: (11) Finish
         run: |
