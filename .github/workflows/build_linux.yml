@@ -91,7 +91,7 @@ jobs:
 
       - name: (10) Upload generated files
         # Need to pack files to maintain permissions (+x mainly)
-        run: tar -cvf libspectrum-compiled-linux.tar *
+        run: tar -cvzf libspectrum-compiled-linux.tar.gz .
       - uses: actions/upload-artifact@v3
         with: 
           name: libspectrum-compiled-linux
