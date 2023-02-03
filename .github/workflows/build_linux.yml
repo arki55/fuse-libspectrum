@@ -93,16 +93,15 @@ jobs:
         # Need to pack files to maintain permissions (+x mainly)
         run: tar -cvzf \
           libspectrum-compiled-linux.tar.gz \
-          --exclude=.git \
-          --exclude=libspectrum-compiled-linux.tar \
-          --exclude=libspectrum-compiled-linux.tar.gz \
+          --exclude=./.git \
+          --exclude=*.tar \
           .
 
       - uses: actions/upload-artifact@v3
         with: 
           name: libspectrum-compiled-linux
           path: |
-            libspectrum-compiled-linux.tar
+            libspectrum-compiled-linux.tar.gz
 
       - name: (11) Finish
         run: |
