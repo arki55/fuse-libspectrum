@@ -2,7 +2,7 @@ name: Libspectrum for Linux (1)
 run-name: Build and test Libspectrum for Linux (1) [ all libs, real glib ] / ${{ github.actor }} /
 
 on:
-  # Executed upon each commit pushed
+  # Executed upon each commit pushed, merge commit in PR
   push:
   pull_request:
   # Called from fuse app, fuse utils repos
