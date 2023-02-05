@@ -4,6 +4,7 @@ run-name: Build and test Libspectrum for Linux (1) [ all libs, real glib ] / ${{
 on:
   # Executed upon each commit pushed
   push:
+  pull_request:
   # Called from fuse app, fuse utils repos
   workflow_call:
     inputs:
