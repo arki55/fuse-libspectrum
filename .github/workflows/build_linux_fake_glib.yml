@@ -1,0 +1,70 @@
+name: Libspectrum for Linux (2)
+run-name: Build and test Libspectrum for Linux (2) [ all libs, fake glib ] / ${{ github.actor }} /
+
+# Executed upon each commit pushed, merge commit in PR
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: (1) Prepare git
+        run: |
+          echo "Not needed in this build"
+
+      - name: (2) Check out repository code
+        uses: actions/checkout@v3
+
+      - name: (3) Install dependencies
+        run: |
+          echo "Installing dependencies .."
+          sudo apt install -y libaudiofile-dev
+
+      - name: (4) Autogen.sh
+        run: |
+          echo "Running autogen.sh .."
+          ./autogen.sh
+
+      - name: (5) Configure for linux (fake glib)
+        run: |
+          echo "Running configure (fake glib) .."
+          ./configure --with-fake-glib | tee ./configure.out
+
+      - name: (6) Verify output from configure
+        run: |
+          .github/scripts/in_config.sh "libspectrum is ready to be compiled"
+          .github/scripts/in_config.sh "zlib support: yes"
+          .github/scripts/in_config.sh "bzip2 support: yes"
+          .github/scripts/in_config.sh "libgcrypt support: yes"
+          .github/scripts/in_config.sh "libaudiofile support: yes"
+          .github/scripts/in_config.sh "Internal GLib replacement: yes"
+
+      - name: (7) Make
+        run: |
+          echo "Running make .."
+          make
+
+      - name: (8) Install (+sudo)
+        run: |
+          echo "Running make install .."
+          sudo make install
+
+      - name: (9) Run tests
+        run: |
+          echo "Bulding and running tests .."
+          make check
+
+      - name: (10) Upload generated files
+        uses: actions/upload-artifact@v3
+        with: 
+          name: libspectrum-linux-fake-glib
+          path: |
+            doc/libspectrum.3
+            libspectrum.h
+            libspectrum.pc
+
+      - name: (11) Finish
+        run: |
+          echo "🍏 Finishing with status ${{ job.status }}."
