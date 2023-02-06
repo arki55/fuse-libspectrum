@@ -81,9 +81,9 @@ jobs:
           cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libwinpthread-1.dll .
           cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libgcrypt-20.dll .
           cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libgpg-error-0.dll .
-          cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libspectrum-9.dll .
           cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libstdc++-6.dll .
           cp /usr/i686-w64-mingw32/sys-root/mingw/bin/zlib1.dll .
+          cp .libs/libspectrum-9.dll .
 
           echo "Running make check.."
           make check
