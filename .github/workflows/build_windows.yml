@@ -149,8 +149,8 @@ jobs:
           cd ${GITHUB_WORKSPACE}
 
           tar -cvf \
-          libspectrum-compiled-linux.tar \
-          --exclude=".git" "libspectrum-compiled-linux.tar" \
+          libspectrum-compiled-windows.tar \
+          --exclude=".git" "libspectrum-compiled-windows.tar" \
           --ignore-failed-read \
           .
 
@@ -158,7 +158,7 @@ jobs:
         with: 
           name: libspectrum-compiled-windows
           path: |
-            libspectrum-compiled-linux.tar
+            libspectrum-compiled-windows.tar
 
       - name: (11) Finish
         run: |
