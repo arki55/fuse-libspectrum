@@ -124,7 +124,7 @@ jobs:
           cd ${GITHUB_WORKSPACE}
 
           echo "Running make install-strip .."
-          sudo make install-strip
+          make install-strip
 
       - name: (9) Run tests
         run: |
