@@ -1,21 +1,62 @@
 name: Libspectrum for Windows
 run-name: Build and test Libspectrum for Windows [ +fake glib, -libaudiofile ] / ${{ github.actor }} /
-on: [push]
+
+on:
+  # Executed upon each commit pushed, merge commit in PR
+  push:
+  pull_request:
+  # Called from fuse app, fuse utils repos
+  workflow_call:
+    inputs:
+      path:
+        type: string
+        required: false
+        default: '.'
+      branch:
+        type: string
+        required: false
+      # Repo is taken from var.LIBSPECTRUM_REPO, cannot be passed as input.
+
 jobs:
   build:
     name: Build & Test
     runs-on: windows-latest
     timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
+        working-directory: ${{ inputs.path || '.' }}
     env:
       CYGWIN_NOWINPATH: 1
+      
+      # Support push and call triggers, set env.variables
+      LIBSPECTRUM_REPO: ${{ vars.LIBSPECTRUM_REPO || '' }}
+      LIBSPECTRUM_BRANCH: ${{ inputs.branch || '' }}
+      LIBSPECTRUM_PATH: ${{ inputs.path || '.' }}
     steps:
-      - name: (1) Prepare git (autocrlf)
-        run: git config --global core.autocrlf input
+      - name: (1) Prepare environment
+        run: |
+          cd ${GITHUB_WORKSPACE}
+
+          echo "Adjust autocrlf in git.."
+          git config --global core.autocrlf input
+          
+          echo -n "Current directory: "
+          pwd
+          ls -la
+          
+          echo "Libspectrum repo: $LIBSPECTRUM_REPO"
+          echo "Libspectrum branch: $LIBSPECTRUM_BRANCH"
+          echo "Libspectrum path: $LIBSPECTRUM_PATH"
 
       - name: (2) Check out repository code
         uses: actions/checkout@v3
+        with:
+          repository: ${{ env.LIBSPECTRUM_REPO }}
+          ref: ${{ env.LIBSPECTRUM_BRANCH }}
+          path: ${{ env.LIBSPECTRUM_PATH }}
 
-      - name: (3) Install dependencies - Cygwin (32 bit) with libs
+      - name: (3) Install Cygwin (32 bit) with libs
         uses: cygwin/cygwin-install-action@master
         with:
           platform: x86
@@ -41,11 +82,17 @@ jobs:
             pkg-config
 
       - name: (4) Autogen.sh
-        run: bash ./autogen.sh
+        run: |
+          cd ${GITHUB_WORKSPACE}
+
+          echo "Running autogen.sh .."
+          ./autogen.sh
 
       - name: (5) Configure for Windows (fake glib)
         run: |
           cd ${GITHUB_WORKSPACE}
+
+          echo "Running configure .."
           ./configure \
           --build=i686-pc-cygwin \
           --host=i686-w64-mingw32 \
@@ -53,29 +100,37 @@ jobs:
           --disable-static \
           --with-fake-glib \
           | tee ./configure.out
-        shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
 
       - name: (6) Verify output from configure
         run: |
           cd ${GITHUB_WORKSPACE}
+
           .github/scripts/in_config.sh "libspectrum is ready to be compiled"
           .github/scripts/in_config.sh "zlib support: yes"
           .github/scripts/in_config.sh "bzip2 support: yes"
           .github/scripts/in_config.sh "libgcrypt support: yes"
           .github/scripts/in_config.sh "libaudiofile support: no"
           .github/scripts/in_config.sh "Internal GLib replacement: yes"
-        shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
 
       - name: (7) Make
-        run: make
+        run: |
+          cd ${GITHUB_WORKSPACE}
+
+          echo "Running make .."
+          make
 
       - name: (8) Install
-        run: make install-strip
+        run: |
+          cd ${GITHUB_WORKSPACE}
+
+          echo "Running make install-strip .."
+          sudo make install-strip
 
       - name: (9) Run tests
         run: |
-          echo "Copying dependency dlls.."
           cd ${GITHUB_WORKSPACE}
+
+          echo "Copying dependency dlls.."
           cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libbz2-1.dll .
           cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libgcc_s_sjlj-1.dll .
           cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libwinpthread-1.dll .
@@ -85,19 +140,25 @@ jobs:
           cp /usr/i686-w64-mingw32/sys-root/mingw/bin/zlib1.dll .
           cp .libs/libspectrum-9.dll .
 
-          echo "Running make check.."
+          echo "Bulding and running tests .."
           make check
-        shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
 
       - name: (10) Upload generated files
-        uses: actions/upload-artifact@v3
+        # Need to pack files to maintain permissions
+        run: |
+          cd ${GITHUB_WORKSPACE}
+
+          tar -cvf \
+          libspectrum-compiled-linux.tar \
+          --exclude=".git" "libspectrum-compiled-linux.tar" \
+          --ignore-failed-read \
+          .
+
+      - uses: actions/upload-artifact@v3
         with: 
-          name: libspectrum-windows
+          name: libspectrum-compiled-windows
           path: |
-            .libs/libspectrum-9.dll
-            doc/libspectrum.3
-            libspectrum.h
-            libspectrum.pc
+            libspectrum-compiled-linux.tar
 
       - name: (11) Finish
         run: |
