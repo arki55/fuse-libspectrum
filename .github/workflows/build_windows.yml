@@ -158,12 +158,22 @@ jobs:
           --exclude=".git" "libspectrum-compiled-windows.tar" \
           --ignore-failed-read \
           .
+          
+          tar -cvf \
+          libspectrum-installed-windows.tar \
+          /usr/local/i686-w64-mingw32/
 
       - uses: actions/upload-artifact@v3
         with: 
           name: libspectrum-compiled-windows
           path: |
             libspectrum-compiled-windows.tar
+
+      - uses: actions/upload-artifact@v3
+        with: 
+          name: libspectrum-installed-windows
+          path: |
+            libspectrum-installed-windows.tar
 
       - name: (11) Finish
         run: |
