@@ -161,7 +161,7 @@ jobs:
           
           tar -cvf \
           libspectrum-installed-windows.tar \
-          /usr/local/i686-w64-mingw32/
+          -C /usr/local/i686-w64-mingw32/ .
 
       - uses: actions/upload-artifact@v3
         with: 
