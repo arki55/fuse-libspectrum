@@ -59,6 +59,7 @@ jobs:
       LIBSPECTRUM_REPO: ${{ vars.LIBSPECTRUM_REPO || '' }}
       LIBSPECTRUM_BRANCH: ${{ inputs.branch || '' }}
       LIBSPECTRUM_PATH: ${{ inputs.path || '.' }}
+
     steps:
       - name: (1) Prepare environment
         run: |
@@ -70,6 +71,11 @@ jobs:
           echo "Libspectrum repo: $LIBSPECTRUM_REPO"
           echo "Libspectrum branch: $LIBSPECTRUM_BRANCH"
           echo "Libspectrum path: $LIBSPECTRUM_PATH"
+          
+          echo "Use lib zlib: ${{ inputs.use_zlib && 'yes' || 'no' }}"
+          echo "Use lib bzip2: ${{ inputs.use_bzip2 && 'yes' || 'no' }}"
+          echo "Use lib libgcrypt: ${{ inputs.use_libgcrypt && 'yes' || 'no' }}"
+          echo "Use lib libaudiofile: ${{ inputs.use_libaudiofile && 'yes' || 'no' }}"
 
       - name: (2) Check out repository code
         uses: actions/checkout@v3
