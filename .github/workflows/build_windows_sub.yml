@@ -90,7 +90,7 @@ jobs:
         with:
           path: |
             C:\cygwin-packages
-          key: cygwin-packages-libspectrum-${{ inputs.key }}
+          key: cygwin-packages-libspectrum-1
 
       - name: (4) Install Cygwin (32 bit) with libs
         uses: cygwin/cygwin-install-action@master
@@ -116,6 +116,7 @@ jobs:
             mingw64-i686-winpthread \
             mingw64-i686-zlib \
             pkg-config
+        # All libs are always installed to have just one cache key
             
       - name: (5) Save Cygwin packages
         id: cygwin-cache-save
@@ -124,7 +125,7 @@ jobs:
         with:
           path: |
             C:\cygwin-packages
-          key: cygwin-packages-libspectrum-${{ inputs.key }}
+          key: cygwin-packages-libspectrum-1
 
       - name: (6) Autogen.sh
         run: |
