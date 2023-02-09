@@ -1,5 +1,5 @@
-name: Libspectrum for Windows (${{ inputs.key }})
-run-name: Build and test Libspectrum for Windows ${{ inputs.key }} / ${{ github.actor }} /
+name: Libspectrum for Windows
+run-name: Build and test Libspectrum for Windows / ${{ github.actor }} /
 
 on:
   # Called from fuse app, fuse utils repos
