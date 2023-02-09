@@ -8,38 +8,38 @@ jobs:
   # Default = all libs enabled, fake glib is always used
   default:
     name: "Build & Test 1"
-    key: "default"
     uses: ./.github/workflows/build_windows_sub.yml
     with:
+      key: "default"
 
   # Without zlib
   no-zlib:
     name: "Build & Test 2"
-    key: "no-zlib"
     uses: ./.github/workflows/build_windows_sub.yml
     with:
+      key: "no-zlib"
       use_zlib: false
 
   # Without bzip2
   no-bzip2:
     name: "Build & Test 3"
-    key: "no-bzip2"
     uses: ./.github/workflows/build_windows_sub.yml
     with:
+      key: "no-bzip2"
       use_bzip2: false
 
   # Without libgcrypt
   no-libgcrypt:
     name: "Build & Test 4"
-    key: "no-libgcrypt"
     uses: ./.github/workflows/build_windows_sub.yml
     with:
+      key: "no-libgcrypt"
       use_libgcrypt: false
 
   # Without libaudiofile
   no-libaudiofile:
     name: "Build & Test 5"
-    key: "no-libaudiofile"
     uses: ./.github/workflows/build_windows_sub.yml
     with:
+      key: "no-libaudiofile"
       use_libaudiofile: false
