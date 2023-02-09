@@ -21,19 +21,19 @@ on:
         default: ""
       # Configure supported libs
       use_zlib:
-        type: string
+        type: boolean
         required: false
         default: true
       use_bzip2:
-        type: string
+        type: boolean
         required: false
         default: true
       use_libgcrypt:
-        type: string
+        type: boolean
         required: false
         default: true
       use_libaudiofile:
-        type: string
+        type: boolean
         required: false
         default: true
       # Repo is taken from var.LIBSPECTRUM_REPO, cannot be passed as input.
@@ -144,10 +144,10 @@ jobs:
           --prefix=/usr/local/i686-w64-mingw32 \
           --disable-static \
           --with-fake-glib \
-          ${{ !inputs.use_zlib && '--without-zlib' }}" \
-          ${{ !inputs.use_bzip2 && '--without-bzip2' }}" \
-          ${{ !inputs.use_libgcrypt && '--without-libgcrypt' }}" \
-          ${{ !inputs.use_libaudiofile && '--without-libaudiofile' }}" \
+          ${{ inputs.use_zlib == false && '--without-zlib' || '' }} \
+          ${{ inputs.use_bzip2 == false && '--without-bzip2' || '' }} \
+          ${{ inputs.use_libgcrypt == false && '--without-libgcrypt' || '' }} \
+          ${{ inputs.use_libaudiofile == false && '--without-libaudiofile' || '' }} \
           | tee ./configure.out
 
       - name: (8) Verify output from configure
