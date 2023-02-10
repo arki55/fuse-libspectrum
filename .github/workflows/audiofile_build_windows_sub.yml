@@ -6,10 +6,6 @@ on:
   # Set repo variable LIBAUDIOFILE_REPO to https://github.com/mpruett/audiofile/ or its clone.
   workflow_call:
     inputs:
-      # Name this setup (no spaces please)
-      key:
-        type: string
-        required: true
       # Path where to clone
       path:
         type: string
@@ -157,7 +153,7 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with: 
-          name: libaudiofile-installed-windows-${{ inputs.key }}
+          name: libaudiofile-installed-windows
           path: |
             libaudiofile-installed-windows.tar
 
