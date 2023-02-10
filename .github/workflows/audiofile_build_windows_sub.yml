@@ -3,7 +3,7 @@ run-name: Build Lib Audiofile for Windows / ${{ github.actor }} /
 
 on:
   # Called from libspectrum's build_windows.yml workflow.
-  # Set repo variable LIBAUDIOFILE_REPO to https://github.com/mpruett/audiofile/ or its clone.
+  # Set repo variable LIBAUDIOFILE_REPO to mpruett/audiofile or its clone.
   workflow_call:
     inputs:
       # Path where to clone
@@ -35,8 +35,8 @@ jobs:
       LDFLAGS: "-L/usr/local/i686-w64-mingw32/lib"
       PKG_CONFIG_LIBDIR: "/usr/local/i686-w64-mingw32/lib/pkgconfig:/usr/i686-w64-mingw32/sys-root/mingw/lib/pkgconfig"
       
-      # Support push and call triggers, set env.variables
-      LIBAUDIOFILE_REPO: ${{ vars.LIBAUDIOFILE_REPO || '' }}
+      # Apply configuration variables, inputs
+      LIBAUDIOFILE_REPO: ${{ vars.LIBAUDIOFILE_REPO || 'mpruett/audiofile' }}
       LIBAUDIOFILE_BRANCH: ${{ inputs.branch || '' }}
       LIBAUDIOFILE_PATH: ${{ inputs.path || '.' }}
 
@@ -100,7 +100,7 @@ jobs:
           echo "Running autogen.sh .."
           ./autogen.sh
 
-      - name: (7) Configure for Windows (fake glib)
+      - name: (7) Configure for Windows
         run: |
           cd ${GITHUB_WORKSPACE}
           
@@ -112,27 +112,21 @@ jobs:
           --disable-static \
           | tee ./configure.out
 
-      - name: (8) Verify output from configure
-        run: |
-          cd ${GITHUB_WORKSPACE}
-          
-          .github/scripts/in_config.sh "libspectrum is ready to be compiled"
-
-      - name: (9) Make
+      - name: (8) Make
         run: |
           cd ${GITHUB_WORKSPACE}
           
           echo "Running make .."
           make
 
-      - name: (10) Install
+      - name: (9) Install
         run: |
           cd ${GITHUB_WORKSPACE}
           
           echo "Running make install-strip .."
           make install-strip
 
-      - name: (11) Run tests
+      - name: (10) Run tests
         run: |
           cd ${GITHUB_WORKSPACE}
           
@@ -142,7 +136,7 @@ jobs:
           echo "Bulding and running tests .."
           make check
 
-      - name: (12) Upload generated files
+      - name: (11) Upload generated files
         # Need to pack files to maintain permissions
         run: |
           cd ${GITHUB_WORKSPACE}
@@ -157,6 +151,6 @@ jobs:
           path: |
             libaudiofile-installed-windows.tar
 
-      - name: (13) Finish
+      - name: (12) Finish
         run: |
           echo "🍏 Finishing with status ${{ job.status }}."
