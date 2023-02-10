@@ -127,14 +127,29 @@ jobs:
             C:\cygwin-packages
           key: cygwin-packages-libspectrum-1
 
-      - name: (6) Autogen.sh
+      - name: (6) Download lib audiofile artefact
+        uses: actions/download-artifact@v3
+        with:
+          name: libaudiofile-installed-windows
+          path: libaudiofile
+
+      - name: (7) Install lib audiofile from artefact
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          # Extract (-x) files into /usr/local (cannot work with root /)
+          mkdir /usr/local/i686-w64-mingw32 || true
+          tar --directory /usr/local/i686-w64-mingw32 -xvf libaudiofile/libaudiofile-installed-windows.tar
+          echo "Done"
+        shell: C:\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
+
+      - name: (8) Autogen.sh
         run: |
           cd ${GITHUB_WORKSPACE}
           
           echo "Running autogen.sh .."
           ./autogen.sh
 
-      - name: (7) Configure for Windows (fake glib)
+      - name: (9) Configure for Windows (fake glib)
         run: |
           cd ${GITHUB_WORKSPACE}
           
@@ -151,7 +166,7 @@ jobs:
           ${{ inputs.use_libaudiofile == false && '--without-libaudiofile' || '' }} \
           | tee ./configure.out
 
-      - name: (8) Verify output from configure
+      - name: (10) Verify output from configure
         run: |
           cd ${GITHUB_WORKSPACE}
           
@@ -162,21 +177,21 @@ jobs:
           .github/scripts/in_config.sh "libaudiofile support: ${{ inputs.use_libaudiofile && 'yes' || 'no' }}"
           .github/scripts/in_config.sh "Internal GLib replacement: yes"
 
-      - name: (9) Make
+      - name: (11) Make
         run: |
           cd ${GITHUB_WORKSPACE}
           
           echo "Running make .."
           make
 
-      - name: (10) Install
+      - name: (12) Install
         run: |
           cd ${GITHUB_WORKSPACE}
           
           echo "Running make install-strip .."
           make install-strip
 
-      - name: (11) Run tests
+      - name: (13) Run tests
         run: |
           cd ${GITHUB_WORKSPACE}
           
@@ -193,7 +208,7 @@ jobs:
           echo "Bulding and running tests .."
           make check
 
-      - name: (12) Upload generated files
+      - name: (14) Upload generated files
         # Need to pack files to maintain permissions
         run: |
           cd ${GITHUB_WORKSPACE}
@@ -208,6 +223,6 @@ jobs:
           path: |
             libspectrum-installed-windows.tar
 
-      - name: (13) Finish
+      - name: (15) Finish
         run: |
           echo "🍏 Finishing with status ${{ job.status }}."

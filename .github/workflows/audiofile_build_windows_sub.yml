@@ -1,0 +1,166 @@
+name: Lib Audiofile for Windows
+run-name: Build Lib Audiofile for Windows / ${{ github.actor }} /
+
+on:
+  # Called from libspectrum's build_windows.yml workflow.
+  # Set repo variable LIBAUDIOFILE_REPO to https://github.com/mpruett/audiofile/ or its clone.
+  workflow_call:
+    inputs:
+      # Name this setup (no spaces please)
+      key:
+        type: string
+        required: true
+      # Path where to clone
+      path:
+        type: string
+        required: false
+        default: '.'
+      # Which branch to checkout
+      branch:
+        type: string
+        required: false        
+        default: ""
+      # Repo is taken from var.LIBAUDIOFILE_REPO, cannot be passed as input.
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: windows-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
+        working-directory: ${{ inputs.path || '.' }}
+    env:
+      CYGWIN_NOWINPATH: 1
+      
+      # Custom build libraries
+      CPPFLAGS: "-I/usr/local/i686-w64-mingw32/include"
+      LDFLAGS: "-L/usr/local/i686-w64-mingw32/lib"
+      PKG_CONFIG_LIBDIR: "/usr/local/i686-w64-mingw32/lib/pkgconfig:/usr/i686-w64-mingw32/sys-root/mingw/lib/pkgconfig"
+      
+      # Support push and call triggers, set env.variables
+      LIBAUDIOFILE_REPO: ${{ vars.LIBAUDIOFILE_REPO || '' }}
+      LIBAUDIOFILE_BRANCH: ${{ inputs.branch || '' }}
+      LIBAUDIOFILE_PATH: ${{ inputs.path || '.' }}
+
+    steps:
+      - name: (1) Prepare environment
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          
+          echo "Adjust autocrlf in git.."
+          git config --global core.autocrlf input
+          
+          echo "Lib Audiofile repo: $LIBAUDIOFILE_REPO"
+          echo "Lib Audiofile branch: $LIBAUDIOFILE_BRANCH"
+          echo "Lib Audiofile path: $LIBAUDIOFILE_PATH"
+
+      - name: (2) Check out repository code
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ env.LIBAUDIOFILE_REPO }}
+          ref: ${{ env.LIBAUDIOFILE_BRANCH }}
+          path: ${{ env.LIBAUDIOFILE_PATH }}
+
+      - name: (3) Restore Cygwin packages
+        id: cygwin-cache-load
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            C:\cygwin-packages
+          key: cygwin-packages-libaudiofile-1
+
+      - name: (4) Install Cygwin (32 bit) with libs
+        uses: cygwin/cygwin-install-action@master
+        with:
+          platform: x86
+          packages: |
+            autoconf \
+            automake \
+            gcc-core \
+            gcc-g++ \
+            libtool \
+            make \
+            mingw64-i686-gcc-core \
+            mingw64-i686-gcc-g++ \
+            
+            pkg-config
+        # All libs are always installed to have just one cache key
+            
+      - name: (5) Save Cygwin packages
+        id: cygwin-cache-save
+        if: steps.cygwin-cache-load.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v3
+        with:
+          path: |
+            C:\cygwin-packages
+          key: cygwin-packages-libaudiofile-1
+
+      - name: (6) Autogen.sh
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          
+          echo "Running autogen.sh .."
+          ./autogen.sh
+
+      - name: (7) Configure for Windows (fake glib)
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          
+          echo "Running configure .."
+          ./configure \
+          --build=i686-pc-cygwin \
+          --host=i686-w64-mingw32 \
+          --prefix=/usr/local/i686-w64-mingw32 \
+          --disable-static \
+          | tee ./configure.out
+
+      - name: (8) Verify output from configure
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          
+          .github/scripts/in_config.sh "libspectrum is ready to be compiled"
+
+      - name: (9) Make
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          
+          echo "Running make .."
+          make
+
+      - name: (10) Install
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          
+          echo "Running make install-strip .."
+          make install-strip
+
+      - name: (11) Run tests
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          
+          echo "Copying dependency dlls.."
+          cp .libs/libaudiofile-1.dll .
+          
+          echo "Bulding and running tests .."
+          make check
+
+      - name: (12) Upload generated files
+        # Need to pack files to maintain permissions
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          
+          tar -cvf \
+          libaudiofile-installed-windows.tar \
+          -C /usr/local/i686-w64-mingw32/ .
+
+      - uses: actions/upload-artifact@v3
+        with: 
+          name: libaudiofile-installed-windows-${{ inputs.key }}
+          path: |
+            libaudiofile-installed-windows.tar
+
+      - name: (13) Finish
+        run: |
+          echo "🍏 Finishing with status ${{ job.status }}."
