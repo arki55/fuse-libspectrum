@@ -22,7 +22,7 @@ jobs:
   build:
     name: Build & Test
     runs-on: windows-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     defaults:
       run:
         shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
