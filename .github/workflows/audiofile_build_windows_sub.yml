@@ -72,17 +72,22 @@ jobs:
         with:
           platform: x86
           packages: |
+            asciidoc \
             autoconf \
             automake \
             bison \
+            file \
+            flac \
+            flac-devel \
             flex \
             gcc-core \
             gcc-g++ \
             libtool \
             make \
+            mt \
             mingw64-i686-gcc-core \
             mingw64-i686-gcc-g++ \
-            
+            mingw64-i686-flac \
             pkg-config
         # All libs are always installed to have just one cache key
             
