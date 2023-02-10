@@ -74,6 +74,8 @@ jobs:
           packages: |
             autoconf \
             automake \
+            bison \
+            flex \
             gcc-core \
             gcc-g++ \
             libtool \
