@@ -1,0 +1,157 @@
+name: Libxml2 for Windows
+run-name: Build Libxml2 for Windows / ${{ github.actor }} /
+
+on:
+  # Called from Fuse App's build_windows.yml workflow.
+  # Set repo variable LIBXML2_REPO to GNOME/libxml2 or its clone.
+  workflow_call:
+    inputs:
+      # Path where to clone
+      path:
+        type: string
+        required: false
+        default: '.'
+      # Which branch to checkout
+      branch:
+        type: string
+        required: false        
+        default: ""
+      # Repo is taken from var.LIBXML2_REPO, cannot be passed as input.
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: windows-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        shell: bash.exe --login --norc -eo pipefail -o igncr '{0}'
+        working-directory: ${{ inputs.path || '.' }}
+    env:
+      CYGWIN_NOWINPATH: 1
+      
+      # Custom build libraries
+      CPPFLAGS: "-I/usr/local/i686-w64-mingw32/include"
+      LDFLAGS: "-L/usr/local/i686-w64-mingw32/lib"
+      PKG_CONFIG_LIBDIR: "/usr/local/i686-w64-mingw32/lib/pkgconfig:/usr/i686-w64-mingw32/sys-root/mingw/lib/pkgconfig"
+      
+      # Apply configuration variables, inputs
+      LIBXML2_REPO: ${{ vars.LIBXML2_REPO || 'GNOME/libxml2' }}
+      LIBXML2_BRANCH: ${{ inputs.branch || 'v2.10.3' }}
+      LIBXML2_PATH: ${{ inputs.path || '.' }}
+
+    steps:
+      - name: (1) Prepare environment
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          
+          echo "Adjust autocrlf in git.."
+          git config --global core.autocrlf input
+          
+          echo "Libxml2 repo: $LIBXML2_REPO"
+          echo "Libxml2 branch: $LIBXML2_BRANCH"
+          echo "Libxml2 path: $LIBXML2_PATH"
+
+      - name: (2) Check out repository code
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ env.LIBXML2_REPO }}
+          ref: ${{ env.LIBXML2_BRANCH }}
+          path: ${{ env.LIBXML2_PATH }}
+
+      - name: (3) Restore Cygwin packages
+        id: cygwin-cache-load
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            C:\cygwin-packages
+          key: cygwin-packages-libxml2-1
+
+      - name: (4) Install Cygwin (32 bit) with libs
+        uses: cygwin/cygwin-install-action@master
+        with:
+          platform: x86
+          packages: |
+            autoconf \
+            automake \
+            gcc-core \
+            gcc-g++ \
+            libtool \
+            make \
+            mingw64-i686-gcc-core \
+            mingw64-i686-gcc-g++ \
+            
+            pkg-config
+        # All libs are always installed to have just one cache key
+            
+      - name: (5) Save Cygwin packages
+        id: cygwin-cache-save
+        if: steps.cygwin-cache-load.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v3
+        with:
+          path: |
+            C:\cygwin-packages
+          key: cygwin-packages-libxml2-1
+
+      - name: (6) Autogen.sh
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          
+          echo "Running autogen.sh .."
+          ./autogen.sh
+
+      - name: (7) Configure for Windows
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          
+          echo "Running configure .."
+          ./configure \
+          --build=i686-pc-cygwin \
+          --host=i686-w64-mingw32 \
+          --prefix=/usr/local/i686-w64-mingw32 \
+          --disable-static \
+          | tee ./configure.out
+
+      - name: (8) Make
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          
+          echo "Running make .."
+          make
+
+      - name: (9) Install
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          
+          echo "Running make install-strip .."
+          make install-strip
+
+      - name: (10) Run tests
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          
+          echo "Copying dependency dlls.."
+          ls -la .libs/
+          cp .libs/libxml2-1.dll .
+          
+          echo "Bulding and running tests .."
+          make check
+
+      - name: (11) Upload generated files
+        # Need to pack files to maintain permissions
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          
+          tar -cvf \
+          libxml2-installed-windows.tar \
+          -C /usr/local/i686-w64-mingw32/ .
+
+      - uses: actions/upload-artifact@v3
+        with: 
+          name: libxml2-installed-windows
+          path: |
+            libxml2-installed-windows.tar
+
+      - name: (12) Finish
+        run: |
+          echo "🍏 Finishing with status ${{ job.status }}."
