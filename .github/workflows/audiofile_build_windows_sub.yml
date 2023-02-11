@@ -37,7 +37,7 @@ jobs:
       
       # Apply configuration variables, inputs
       LIBAUDIOFILE_REPO: ${{ vars.LIBAUDIOFILE_REPO || 'mpruett/audiofile' }}
-      LIBAUDIOFILE_BRANCH: ${{ inputs.branch || vars.LIBAUDIOFILE_REPO || 'audiofile-0.3.6' }}
+      LIBAUDIOFILE_BRANCH: ${{ inputs.branch || vars.LIBAUDIOFILE_BRANCH || 'audiofile-0.3.6' }}
       LIBAUDIOFILE_PATH: ${{ inputs.path || '.' }}
 
     steps:
