@@ -97,6 +97,7 @@ jobs:
         with:
           platform: x86
           packages: |
+            audiofile \
             autoconf \
             automake \
             bison \
@@ -105,7 +106,9 @@ jobs:
             gcc-g++ \
             gettext-devel \
             libtool \
+            libaudiofile-devel \
             make \
+            mingw64-i686-audiofile \
             mingw64-i686-bzip2 \
             mingw64-i686-gcc-core \
             mingw64-i686-gcc-g++ \

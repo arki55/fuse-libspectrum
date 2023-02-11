@@ -5,16 +5,9 @@ run-name: Build and test Libspectrum for Windows / ${{ github.actor }} /
 on: [push, pull_request]
   
 jobs:
-  # Build Libaudiofile (dependency)
-  libaudiofile:
-    name: "Lib Audiofile (Windows)"
-    uses: ./.github/workflows/audiofile_build_windows_sub.yml
-
-
   # 1. Default = all libs enabled, fake glib is always used
   default:
     name: "Libspectrum + all libs (Windows)"
-    needs: [libaudiofile]
     uses: ./.github/workflows/build_windows_sub.yml
     with:
       key: "default"
@@ -22,7 +15,6 @@ jobs:
   # 2. Without zlib
   no-zlib:
     name: "Libspectrum w/o zlib (Windows)"
-    needs: [libaudiofile]
     uses: ./.github/workflows/build_windows_sub.yml
     with:
       key: "no-zlib"
@@ -31,7 +23,6 @@ jobs:
   # 3. Without bzip2
   no-bzip2:
     name: "Libspectrum w/o bzip2 (Windows)"
-    needs: [libaudiofile]
     uses: ./.github/workflows/build_windows_sub.yml
     with:
       key: "no-bzip2"
@@ -40,7 +31,6 @@ jobs:
   # 4. Without libgcrypt
   no-libgcrypt:
     name: "Libspectrum w/o libgcrypt (Windows)"
-    needs: [libaudiofile]
     uses: ./.github/workflows/build_windows_sub.yml
     with:
       key: "no-libgcrypt"
@@ -49,7 +39,6 @@ jobs:
   # 5. Without libaudiofile
   no-libaudiofile:
     name: "Libspectrum w/o libaudiofile (Windows)"
-    needs: [libaudiofile]
     uses: ./.github/workflows/build_windows_sub.yml
     with:
       key: "no-libaudiofile"
@@ -58,7 +47,6 @@ jobs:
   # 6. Without all libs
   no-libs:
     name: "Libspectrum w/o all libs (Windows)"
-    needs: [libaudiofile]
     uses: ./.github/workflows/build_windows_sub.yml
     with:
       key: "no-libs"
