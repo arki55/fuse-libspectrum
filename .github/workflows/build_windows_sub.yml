@@ -184,6 +184,7 @@ jobs:
           cd ${GITHUB_WORKSPACE}
           
           echo "Copying dependency dlls.."
+          cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libaudiofile-1.dll .
           cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libbz2-1.dll .
           cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libgcc_s_sjlj-1.dll .
           cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libwinpthread-1.dll .
