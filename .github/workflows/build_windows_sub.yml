@@ -54,6 +54,8 @@ jobs:
       CPPFLAGS: "-I/usr/local/i686-w64-mingw32/include"
       LDFLAGS: "-L/usr/local/i686-w64-mingw32/lib"
       PKG_CONFIG_LIBDIR: "/usr/local/i686-w64-mingw32/lib/pkgconfig:/usr/i686-w64-mingw32/sys-root/mingw/lib/pkgconfig"
+      # Small help when copying dlls
+      CYGWIN_LIBDIR: "/usr/i686-w64-mingw32/sys-root/mingw/bin/"
       
       # Support push and call triggers, set env.variables
       LIBSPECTRUM_REPO: ${{ vars.LIBSPECTRUM_REPO || '' }}
@@ -184,14 +186,16 @@ jobs:
           cd ${GITHUB_WORKSPACE}
           
           echo "Copying dependency dlls.."
-          cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libaudiofile-1.dll .
-          cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libbz2-1.dll .
-          cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libgcc_s_sjlj-1.dll .
-          cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libwinpthread-1.dll .
-          cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libgcrypt-20.dll .
-          cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libgpg-error-0.dll .
-          cp /usr/i686-w64-mingw32/sys-root/mingw/bin/libstdc++-6.dll .
-          cp /usr/i686-w64-mingw32/sys-root/mingw/bin/zlib1.dll .
+          cp ${CYGWIN_LIBDIR}libaudiofile-1.dll .
+          cp ${CYGWIN_LIBDIR}libFLAC-8.dll .
+          cp ${CYGWIN_LIBDIR}libOGG-0.dll .
+          cp ${CYGWIN_LIBDIR}libbz2-1.dll .
+          cp ${CYGWIN_LIBDIR}libgcc_s_sjlj-1.dll .
+          cp ${CYGWIN_LIBDIR}libwinpthread-1.dll .
+          cp ${CYGWIN_LIBDIR}libgcrypt-20.dll .
+          cp ${CYGWIN_LIBDIR}libgpg-error-0.dll .
+          cp ${CYGWIN_LIBDIR}libstdc++-6.dll .
+          cp ${CYGWIN_LIBDIR}zlib1.dll .
           cp .libs/libspectrum-9.dll .
           
           echo "Bulding and running tests .."
