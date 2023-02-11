@@ -192,12 +192,12 @@ jobs:
           cp ${CYGWIN_LIBDIR}libstdc++-6.dll .
           
           echo "Copying optional dependency dlls.."
-          ${{ inputs.use_zlib && 'cp ${CYGWIN_LIBDIR}zlib1.dll .' || ''}}
-          ${{ inputs.use_bzip2 && 'cp ${CYGWIN_LIBDIR}libbz2-1.dll .' || ''}}
-          ${{ inputs.use_libgcrypt && 'cp ${CYGWIN_LIBDIR}libgcrypt-20.dll .' || ''}}
-          ${{ inputs.use_libaudiofile 'cp ${CYGWIN_LIBDIR}libaudiofile-1.dll .' || ''}}
-          ${{ inputs.use_libaudiofile 'cp ${CYGWIN_LIBDIR}libFLAC-8.dll .' || ''}}
-          ${{ inputs.use_libaudiofile 'cp ${CYGWIN_LIBDIR}libOGG-0.dll .' || ''}}
+          ${{ inputs.use_zlib         && 'cp ${CYGWIN_LIBDIR}zlib1.dll .'          || ''}}
+          ${{ inputs.use_bzip2        && 'cp ${CYGWIN_LIBDIR}libbz2-1.dll .'       || ''}}
+          ${{ inputs.use_libgcrypt    && 'cp ${CYGWIN_LIBDIR}libgcrypt-20.dll .'   || ''}}
+          ${{ inputs.use_libaudiofile && 'cp ${CYGWIN_LIBDIR}libaudiofile-1.dll .' || ''}}
+          ${{ inputs.use_libaudiofile && 'cp ${CYGWIN_LIBDIR}libFLAC-8.dll .'      || ''}}
+          ${{ inputs.use_libaudiofile && 'cp ${CYGWIN_LIBDIR}libOGG-0.dll .'       || ''}}
           
           echo "Copying own dll.."
           cp .libs/libspectrum-9.dll .
