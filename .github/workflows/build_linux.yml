@@ -5,6 +5,10 @@ run-name: Build and test Libspectrum for Linux / ${{ github.actor }} /
 on: [push, pull_request]
   
 jobs:
+  #################
+  ### REAL GLIB ###
+  #################
+
   # 1. Default = all libs enabled, fake glib no
   default:
     name: "Libspectrum + all libs (Linux, real glib)"
@@ -55,7 +59,19 @@ jobs:
       use_libgcrypt: false
       use_libaudiofile: false
 
-  # 7. Without zlib (fake glib)
+  #################
+  ### FAKE GLIB ###
+  #################
+
+  # 7. Default = all libs enabled, fake glib yes
+  default:
+    name: "Libspectrum + all libs (Linux, fake glib)"
+    uses: ./.github/workflows/build_linux_sub.yml
+    with:
+      key: "default-fake-glib"
+      use_fake_glib: true
+
+  # 8. Without zlib (fake glib)
   no-zlib-fake-glib:
     name: "Libspectrum w/o zlib (Linux, fake glib)"
     uses: ./.github/workflows/build_linux_sub.yml
@@ -64,7 +80,7 @@ jobs:
       use_zlib: false
       use_fake_glib: true
 
-  # 8. Without bzip2 (fake glib)
+  # 9. Without bzip2 (fake glib)
   no-bzip2-fake-glib:
     name: "Libspectrum w/o bzip2 (Linux, fake glib)"
     uses: ./.github/workflows/build_linux_sub.yml
@@ -73,7 +89,7 @@ jobs:
       use_bzip2: false
       use_fake_glib: true
 
-  # 9. Without libgcrypt (fake glib)
+  # 10. Without libgcrypt (fake glib)
   no-libgcrypt-fake-glib:
     name: "Libspectrum w/o libgcrypt (Linux, fake glib)"
     uses: ./.github/workflows/build_linux_sub.yml
@@ -82,7 +98,7 @@ jobs:
       use_libgcrypt: false
       use_fake_glib: true
 
-  # 10. Without libaudiofile (fake glib)
+  # 11. Without libaudiofile (fake glib)
   no-libaudiofile-fake-glib:
     name: "Libspectrum w/o libaudiofile (Linux, fake glib)"
     uses: ./.github/workflows/build_linux_sub.yml
@@ -91,7 +107,7 @@ jobs:
       use_libaudiofile: false
       use_fake_glib: true
 
-  # 11. Without all libs (fake glib)
+  # 12. Without all libs (fake glib)
   no-libs-fake-glib:
     name: "Libspectrum w/o all libs (Linux, fake glib)"
     uses: ./.github/workflows/build_linux_sub.yml
