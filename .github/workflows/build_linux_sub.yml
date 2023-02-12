@@ -136,9 +136,10 @@ jobs:
       - name: (10) Upload generated files
         # Need to pack files to maintain permissions (+x mainly)
         run: |
+          find /usr/local | grep libspectrum > .tar_files
           sudo tar -cvf \
           libspectrum-installed-linux.tar \
-          -C /usr/local/ .
+          -C /usr/local/ -T.tar_files .
 
       - uses: actions/upload-artifact@v3
         with: 
