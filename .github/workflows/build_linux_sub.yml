@@ -139,7 +139,7 @@ jobs:
           find /usr/local | grep libspectrum > .tar_files
           sudo tar -cvf \
           libspectrum-installed-linux.tar \
-          -C /usr/local/ -T.tar_files .
+          -C /usr/local/ -T.tar_files
 
       - uses: actions/upload-artifact@v3
         with: 
