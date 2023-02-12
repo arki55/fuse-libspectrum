@@ -64,7 +64,7 @@ jobs:
   #################
 
   # 7. Default = all libs enabled, fake glib yes
-  default:
+  default-fake-glib:
     name: "Libspectrum + all libs (Linux, fake glib)"
     uses: ./.github/workflows/build_linux_sub.yml
     with:
