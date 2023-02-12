@@ -138,7 +138,7 @@ jobs:
         run: |
           sudo tar -cvf \
           libspectrum-installed-linux.tar \
-          -C /usr/local/i686-w64-mingw32/ .
+          -C /usr/local/ .
 
       - uses: actions/upload-artifact@v3
         with: 
