@@ -60,7 +60,7 @@ jobs:
     name: "Libspectrum w/o zlib (Linux, fake glib)"
     uses: ./.github/workflows/build_linux_sub.yml
     with:
-      key: "no-zlib"
+      key: "no-zlib-fake-glib"
       use_zlib: false
       use_fake_glib: true
 
@@ -69,7 +69,7 @@ jobs:
     name: "Libspectrum w/o bzip2 (Linux, fake glib)"
     uses: ./.github/workflows/build_linux_sub.yml
     with:
-      key: "no-bzip2"
+      key: "no-bzip2-fake-glib"
       use_bzip2: false
       use_fake_glib: true
 
@@ -78,7 +78,7 @@ jobs:
     name: "Libspectrum w/o libgcrypt (Linux, fake glib)"
     uses: ./.github/workflows/build_linux_sub.yml
     with:
-      key: "no-libgcrypt"
+      key: "no-libgcrypt-fake-glib"
       use_libgcrypt: false
       use_fake_glib: true
 
@@ -87,7 +87,7 @@ jobs:
     name: "Libspectrum w/o libaudiofile (Linux, fake glib)"
     uses: ./.github/workflows/build_linux_sub.yml
     with:
-      key: "no-libaudiofile"
+      key: "no-libaudiofile-fake-glib"
       use_libaudiofile: false
       use_fake_glib: true
 
@@ -96,7 +96,7 @@ jobs:
     name: "Libspectrum w/o all libs (Linux, fake glib)"
     uses: ./.github/workflows/build_linux_sub.yml
     with:
-      key: "no-libs"
+      key: "no-libs-fake-glib"
       use_zlib: false
       use_bzip2: false
       use_libgcrypt: false
