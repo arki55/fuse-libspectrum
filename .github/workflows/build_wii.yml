@@ -1,81 +1,56 @@
 name: Libspectrum for WII
-run-name: Build and test Libspectrum for WII [ +fake glib, no libs ] / ${{ github.actor }} /
-on: [push]
+run-name: Build and test Libspectrum for WII / ${{ github.actor }} /
+
+# Executed upon each commit pushed, merge commit in PR
+on: [push, pull_request]
+  
 jobs:
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    container: devkitpro/devkitppc
-    steps:
-      - name: (1) Check out repository code
-        uses: actions/checkout@v3
+  # 1. Default = all libs enabled, fake glib is always used
+  default:
+    name: "Libspectrum + all libs (WII)"
+    uses: ./.github/workflows/build_wii_sub.yml
+    with:
+      key: "default"
 
-      - name: (2) Install dependencies
-        run: |
-          echo "Installing dependencies .."
-          echo "Using devkitpro/devkitppc image"
-          sudo apt-get update
-          sudo apt-get -y install --no-install-recommends \
-            wget tar autoconf automake libtool && \
-          sudo rm -rf /var/lib/apt/lists/*
-          echo "Done."
-          
-        shell: bash
+  # 2. Without zlib
+  no-zlib:
+    name: "Libspectrum w/o zlib (WII)"
+    uses: ./.github/workflows/build_wii_sub.yml
+    with:
+      key: "no-zlib"
+      use_zlib: false
 
-      - name: (3) Autogen.sh
-        run: |
-          echo "Running autogen.sh .."
-          ./autogen.sh
-        shell: bash
+  # 3. Without bzip2
+  no-bzip2:
+    name: "Libspectrum w/o bzip2 (WII)"
+    uses: ./.github/workflows/build_wii_sub.yml
+    with:
+      key: "no-bzip2"
+      use_bzip2: false
 
-      - name: (4) Configure for WII (fake glib)
-        run: |
-          echo "Running configure for WII .."
-          ./configure --target=powerpc-eabi --host=powerpc-eabi \
-            --prefix=$DEVKITPPC \
-            --without-libgcrypt --with-fake-glib --without-libaudiofile \
-            | tee ./configure.out
-        shell: bash
+  # 4. Without libgcrypt
+  no-libgcrypt:
+    name: "Libspectrum w/o libgcrypt (WII)"
+    uses: ./.github/workflows/build_wii_sub.yml
+    with:
+      key: "no-libgcrypt"
+      use_libgcrypt: false
 
-      - name: (5) Verify output from configure
-        run: |
-          .github/scripts/in_config.sh "libspectrum is ready to be compiled"
-          .github/scripts/in_config.sh "zlib support: no"
-          .github/scripts/in_config.sh "bzip2 support: no"
-          .github/scripts/in_config.sh "libgcrypt support: no"
-          .github/scripts/in_config.sh "libaudiofile support: no"
-          .github/scripts/in_config.sh "Internal GLib replacement: yes"
-        shell: bash
+  # 5. Without libaudiofile
+  no-libaudiofile:
+    name: "Libspectrum w/o libaudiofile (WII)"
+    uses: ./.github/workflows/build_wii_sub.yml
+    with:
+      key: "no-libaudiofile"
+      use_libaudiofile: false
 
-      - name: (6) Make
-        run: |
-          echo "Running make .."
-          make
-        shell: bash
-
-      - name: (7) Install (+sudo)
-        run: |
-          echo "Running make install .."
-          sudo make install
-        shell: bash
-
-      - name: (8) Run tests
-        run: |
-          echo "Bulding and running tests .."
-          ## make check  <-- cross compiled, cannot execute under Linux
-          echo "FIXME: make check not possible, cross compiled."
-        shell: bash
-
-      - name: (10) Upload generated files
-        uses: actions/upload-artifact@v3
-        with: 
-          name: libspectrum-wii
-          path: |
-            doc/libspectrum.3
-            libspectrum.h
-            libspectrum.pc
-
-      - name: (10) Finish
-        run: |
-          echo "🍏 Finishing with status ${{ job.status }}."
+  # 6. Without all libs
+  no-libs:
+    name: "Libspectrum w/o all libs (WII)"
+    uses: ./.github/workflows/build_wii_sub.yml
+    with:
+      key: "no-libs"
+      use_zlib: false
+      use_bzip2: false
+      use_libgcrypt: false
+      use_libaudiofile: false
