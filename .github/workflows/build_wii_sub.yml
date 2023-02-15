@@ -70,6 +70,14 @@ jobs:
           echo "Use lib libgcrypt: ${{ inputs.use_libgcrypt && 'yes' || 'no' }}"
           echo "Use lib libaudiofile: ${{ inputs.use_libaudiofile && 'yes' || 'no' }}"
           echo "Use fake glib: ${{ inputs.use_fake_glib && 'yes' || 'no' }}"
+          
+          echo "Available pacman packages:"
+          dkp-pacman -Sl
+          echo ""
+          
+          echo "Available devkitPro packages:"
+          dkp-pacman -Sl dkp-libs
+          echo ""
 
       - name: (2) Check out repository code
         uses: actions/checkout@v3
