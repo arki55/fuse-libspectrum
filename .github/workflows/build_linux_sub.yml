@@ -81,7 +81,11 @@ jobs:
           ref: ${{ env.LIBSPECTRUM_BRANCH }}
           path: ${{ env.LIBSPECTRUM_PATH }}
 
-      - name: (3) Install dependencies
+      - name: (3) Restore lib packages
+        run: |
+          echo "Not needed here"
+
+      - name: (4) Install dependencies
         run: |
           pwd
           ls -la
@@ -93,12 +97,16 @@ jobs:
             libglib2.0-dev \
             libxml2-dev
 
-      - name: (4) Autogen.sh
+      - name: (5) Save lib packages
+        run: |
+          echo "Not needed here"
+
+      - name: (6) Autogen.sh
         run: |
           echo "Running autogen.sh .."
           ./autogen.sh
 
-      - name: (5) Configure for linux
+      - name: (7) Configure for Linux
         run: |
           echo "Running configure .."
           ./configure \
@@ -109,7 +117,7 @@ jobs:
           ${{ inputs.use_fake_glib == true && '--with-fake-glib' || '' }} \
           | tee ./configure.out
 
-      - name: (6) Verify output from configure
+      - name: (8) Verify output from configure
         run: |
           .github/scripts/in_config.sh "libspectrum is ready to be compiled"
           .github/scripts/in_config.sh "zlib support: ${{ inputs.use_zlib && 'yes' || 'no' }}"
@@ -118,22 +126,35 @@ jobs:
           .github/scripts/in_config.sh "libaudiofile support: ${{ inputs.use_libaudiofile && 'yes' || 'no' }}"
           .github/scripts/in_config.sh "Internal GLib replacement: ${{ inputs.use_fake_glib && 'yes' || 'no' }}"
 
-      - name: (7) Make
+      - name: (9) Make
         run: |
           echo "Running make .."
           make
 
-      - name: (8) Install
+      - name: (10) Install
         run: |
           echo "Running make install .."
           sudo make install
 
-      - name: (9) Run tests
+      - name: (11) Copy dependencies
+        run: |
+          echo "Not needed here."
+
+      - name: (12) Run tests
+        id: run-tests
         run: |
           echo "Bulding and running tests .."
           make check
 
-      - name: (10) Upload generated files
+      - name: (13) Verbose check tests (on failure)
+        if: failure() && steps.run-tests.outcome != 'success'
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          
+          echo "Listing all tests individually .."
+          test/test
+
+      - name: (14) Pack installed library files
         # Need to pack files to maintain permissions (+x mainly)
         run: |
           find /usr/local | grep libspectrum > .tar_files
@@ -141,12 +162,13 @@ jobs:
           libspectrum-installed-linux.tar \
           -C /usr/local/ -T.tar_files
 
-      - uses: actions/upload-artifact@v3
+      - name: (15) Upload generated tar file
+        uses: actions/upload-artifact@v3
         with: 
           name: libspectrum-installed-linux-${{ inputs.key }}
           path: |
             libspectrum-installed-linux.tar
 
-      - name: (11) Finish
+      - name: (16) Finish
         run: |
           echo "🍏 Finishing with status ${{ job.status }}."

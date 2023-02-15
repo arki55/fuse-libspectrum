@@ -17,7 +17,7 @@ on:
       # Which branch to checkout
       branch:
         type: string
-        required: false        
+        required: false
         default: ""
       # Configure supported libs
       use_zlib:
@@ -132,14 +132,14 @@ jobs:
             C:\cygwin-packages
           key: cygwin-packages-libspectrum-1
 
-      - name: (8) Autogen.sh
+      - name: (6) Autogen.sh
         run: |
           cd ${GITHUB_WORKSPACE}
           
           echo "Running autogen.sh .."
           ./autogen.sh
 
-      - name: (9) Configure for Windows (fake glib)
+      - name: (7) Configure for Windows (fake glib)
         run: |
           cd ${GITHUB_WORKSPACE}
           
@@ -156,7 +156,7 @@ jobs:
           ${{ inputs.use_libaudiofile == false && '--without-libaudiofile' || '' }} \
           | tee ./configure.out
 
-      - name: (10) Verify output from configure
+      - name: (8) Verify output from configure
         run: |
           cd ${GITHUB_WORKSPACE}
           
@@ -167,21 +167,21 @@ jobs:
           .github/scripts/in_config.sh "libaudiofile support: ${{ inputs.use_libaudiofile && 'yes' || 'no' }}"
           .github/scripts/in_config.sh "Internal GLib replacement: yes"
 
-      - name: (11) Make
+      - name: (9) Make
         run: |
           cd ${GITHUB_WORKSPACE}
           
           echo "Running make .."
           make
 
-      - name: (12) Install
+      - name: (10) Install
         run: |
           cd ${GITHUB_WORKSPACE}
           
           echo "Running make install-strip .."
           make install-strip
 
-      - name: (13) Run tests
+      - name: (11) Copy dependency dlls
         run: |
           cd ${GITHUB_WORKSPACE}
           
@@ -202,10 +202,23 @@ jobs:
           echo "Copying own dll.."
           cp .libs/libspectrum-9.dll .
           
+      - name: (12) Run tests
+        id: run-tests
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          
           echo "Bulding and running tests .."
           make check
 
-      - name: (14) Upload generated files
+      - name: (13) Verbose check tests (on failure)
+        if: failure() && steps.run-tests.outcome != 'success'
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          
+          echo "Listing all tests individually .."
+          test/test.exe
+
+      - name: (14) Pack installed library files
         # Need to pack files to maintain permissions
         run: |
           cd ${GITHUB_WORKSPACE}
@@ -214,12 +227,13 @@ jobs:
           libspectrum-installed-windows.tar \
           -C /usr/local/i686-w64-mingw32/ .
 
-      - uses: actions/upload-artifact@v3
+      - name: (15) Upload generated tar file
+        uses: actions/upload-artifact@v3
         with: 
           name: libspectrum-installed-windows-${{ inputs.key }}
           path: |
             libspectrum-installed-windows.tar
 
-      - name: (15) Finish
+      - name: (16) Finish
         run: |
           echo "🍏 Finishing with status ${{ job.status }}."
