@@ -5,12 +5,17 @@ run-name: Build and test Libspectrum for WII / ${{ github.actor }} /
 on: [push, pull_request]
   
 jobs:
+  #################
+  ### FAKE GLIB ###
+  #################
+
   # 1. Default = all libs enabled, fake glib is always used
   default:
     name: "Libspectrum + all libs (WII)"
     uses: ./.github/workflows/build_wii_sub.yml
     with:
       key: "default"
+      use_fake_glib: true
 
   # 2. Without zlib
   no-zlib:
@@ -19,6 +24,7 @@ jobs:
     with:
       key: "no-zlib"
       use_zlib: false
+      use_fake_glib: true
 
   # 3. Without bzip2
   no-bzip2:
@@ -27,6 +33,7 @@ jobs:
     with:
       key: "no-bzip2"
       use_bzip2: false
+      use_fake_glib: true
 
   # 4. Without libgcrypt
   no-libgcrypt:
@@ -35,6 +42,7 @@ jobs:
     with:
       key: "no-libgcrypt"
       use_libgcrypt: false
+      use_fake_glib: true
 
   # 5. Without libaudiofile
   no-libaudiofile:
@@ -43,6 +51,7 @@ jobs:
     with:
       key: "no-libaudiofile"
       use_libaudiofile: false
+      use_fake_glib: true
 
   # 6. Without all libs
   no-libs:
@@ -54,3 +63,4 @@ jobs:
       use_bzip2: false
       use_libgcrypt: false
       use_libaudiofile: false
+      use_fake_glib: true
