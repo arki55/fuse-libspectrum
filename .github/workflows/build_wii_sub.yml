@@ -149,7 +149,8 @@ jobs:
         if: failure() && steps.run-tests.outcome != 'success'
         run: |
           echo "Listing all tests individually .."
-          test/test
+          ## test/test  <-- cross compiled, cannot execute under Linux
+          echo "FIXME: test/test not possible, cross compiled."
 
       - name: (14) Pack installed library files
         # Need to pack files to maintain permissions (+x mainly)
