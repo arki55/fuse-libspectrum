@@ -154,10 +154,10 @@ jobs:
       - name: (14) Pack installed library files
         # Need to pack files to maintain permissions (+x mainly)
         run: |
-          find /usr/local | grep libspectrum > .tar_files
+          find /opt/devkitpro/devkitPPC | grep libspectrum > .tar_files
           sudo tar -cvf \
           libspectrum-installed-wii.tar \
-          -C /usr/local/ -T.tar_files
+          -C /opt/devkitpro/devkitPPC/ -T.tar_files
 
       - name: (15) Upload generated tar file
         uses: actions/upload-artifact@v3

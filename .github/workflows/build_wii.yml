@@ -5,60 +5,12 @@ run-name: Build and test Libspectrum for WII / ${{ github.actor }} /
 on: [push, pull_request]
   
 jobs:
-  #################
-  ### FAKE GLIB ###
-  #################
-
-  # 1. Default = all libs enabled, fake glib is always used
+  # 1. Only one case possible - without all libs, fake glib
   default:
-    name: "Libspectrum + all libs (WII)"
+    name: "Libspectrum w/o all libs, fake glib (WII)"
     uses: ./.github/workflows/build_wii_sub.yml
     with:
       key: "default"
-      use_fake_glib: true
-
-  # 2. Without zlib
-  no-zlib:
-    name: "Libspectrum w/o zlib (WII)"
-    uses: ./.github/workflows/build_wii_sub.yml
-    with:
-      key: "no-zlib"
-      use_zlib: false
-      use_fake_glib: true
-
-  # 3. Without bzip2
-  no-bzip2:
-    name: "Libspectrum w/o bzip2 (WII)"
-    uses: ./.github/workflows/build_wii_sub.yml
-    with:
-      key: "no-bzip2"
-      use_bzip2: false
-      use_fake_glib: true
-
-  # 4. Without libgcrypt
-  no-libgcrypt:
-    name: "Libspectrum w/o libgcrypt (WII)"
-    uses: ./.github/workflows/build_wii_sub.yml
-    with:
-      key: "no-libgcrypt"
-      use_libgcrypt: false
-      use_fake_glib: true
-
-  # 5. Without libaudiofile
-  no-libaudiofile:
-    name: "Libspectrum w/o libaudiofile (WII)"
-    uses: ./.github/workflows/build_wii_sub.yml
-    with:
-      key: "no-libaudiofile"
-      use_libaudiofile: false
-      use_fake_glib: true
-
-  # 6. Without all libs
-  no-libs:
-    name: "Libspectrum w/o all libs (WII)"
-    uses: ./.github/workflows/build_wii_sub.yml
-    with:
-      key: "no-libs"
       use_zlib: false
       use_bzip2: false
       use_libgcrypt: false
