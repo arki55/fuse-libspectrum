@@ -87,10 +87,11 @@ jobs:
 
       - name: (4) Install dependencies
         run: |
-          pwd
-          ls -la
+          echo "Inspect if brew installed .."
+          brew doctor
+          
           echo "Installing dependencies .."
-          sudo apt install -y \
+          brew install \
             libaudiofile-dev \
             libbz2-dev \
             libgcrypt-dev \
