@@ -6,64 +6,10 @@ on: [push, pull_request]
   
 jobs:
   #################
-  ### REAL GLIB ###
-  #################
-
-  # 1. Default = all libs enabled, fake glib no
-  default:
-    name: "Libspectrum + all libs (MacOS, real glib)"
-    uses: ./.github/workflows/build_macos_sub.yml
-    with:
-      key: "default"
-
-  # 2. Without zlib (real glib)
-  no-zlib:
-    name: "Libspectrum w/o zlib (MacOS, real glib)"
-    uses: ./.github/workflows/build_macos_sub.yml
-    with:
-      key: "no-zlib"
-      use_zlib: false
-
-  # 3. Without bzip2 (real glib)
-  no-bzip2:
-    name: "Libspectrum w/o bzip2 (MacOS, real glib)"
-    uses: ./.github/workflows/build_macos_sub.yml
-    with:
-      key: "no-bzip2"
-      use_bzip2: false
-
-  # 4. Without libgcrypt (real glib)
-  no-libgcrypt:
-    name: "Libspectrum w/o libgcrypt (MacOS, real glib)"
-    uses: ./.github/workflows/build_macos_sub.yml
-    with:
-      key: "no-libgcrypt"
-      use_libgcrypt: false
-
-  # 5. Without libaudiofile (real glib)
-  no-libaudiofile:
-    name: "Libspectrum w/o libaudiofile (MacOS, real glib)"
-    uses: ./.github/workflows/build_macos_sub.yml
-    with:
-      key: "no-libaudiofile"
-      use_libaudiofile: false
-
-  # 6. Without all libs (real glib)
-  no-libs:
-    name: "Libspectrum w/o all libs (MacOS, real glib)"
-    uses: ./.github/workflows/build_macos_sub.yml
-    with:
-      key: "no-libs"
-      use_zlib: false
-      use_bzip2: false
-      use_libgcrypt: false
-      use_libaudiofile: false
-
-  #################
   ### FAKE GLIB ###
   #################
 
-  # 7. Default = all libs enabled, fake glib yes
+  # 1. Default = all libs enabled, fake glib yes
   default-fake-glib:
     name: "Libspectrum + all libs (MacOS, fake glib)"
     uses: ./.github/workflows/build_macos_sub.yml
@@ -71,7 +17,7 @@ jobs:
       key: "default-fake-glib"
       use_fake_glib: true
 
-  # 8. Without zlib (fake glib)
+  # 2. Without zlib (fake glib)
   no-zlib-fake-glib:
     name: "Libspectrum w/o zlib (MacOS, fake glib)"
     uses: ./.github/workflows/build_macos_sub.yml
@@ -80,7 +26,7 @@ jobs:
       use_zlib: false
       use_fake_glib: true
 
-  # 9. Without bzip2 (fake glib)
+  # 3. Without bzip2 (fake glib)
   no-bzip2-fake-glib:
     name: "Libspectrum w/o bzip2 (MacOS, fake glib)"
     uses: ./.github/workflows/build_macos_sub.yml
@@ -89,7 +35,7 @@ jobs:
       use_bzip2: false
       use_fake_glib: true
 
-  # 10. Without libgcrypt (fake glib)
+  # 4. Without libgcrypt (fake glib)
   no-libgcrypt-fake-glib:
     name: "Libspectrum w/o libgcrypt (MacOS, fake glib)"
     uses: ./.github/workflows/build_macos_sub.yml
@@ -98,7 +44,7 @@ jobs:
       use_libgcrypt: false
       use_fake_glib: true
 
-  # 11. Without libaudiofile (fake glib)
+  # 5. Without libaudiofile (fake glib)
   no-libaudiofile-fake-glib:
     name: "Libspectrum w/o libaudiofile (MacOS, fake glib)"
     uses: ./.github/workflows/build_macos_sub.yml
@@ -107,7 +53,7 @@ jobs:
       use_libaudiofile: false
       use_fake_glib: true
 
-  # 12. Without all libs (fake glib)
+  # 6. Without all libs (fake glib)
   no-libs-fake-glib:
     name: "Libspectrum w/o all libs (MacOS, fake glib)"
     uses: ./.github/workflows/build_macos_sub.yml
