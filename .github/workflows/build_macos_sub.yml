@@ -92,11 +92,11 @@ jobs:
           
           echo "Installing dependencies .."
           brew install \
-            libaudiofile-dev \
-            libbz2-dev \
-            libgcrypt-dev \
-            libglib2.0-dev \
-            libxml2-dev
+            audiofile \
+            bzip2 \
+            libgcrypt \
+            glib \
+            libxml2
 
       - name: (5) Save lib packages
         run: |
