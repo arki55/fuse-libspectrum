@@ -92,11 +92,13 @@ jobs:
           
           echo "Installing dependencies .."
           brew install \
+            automake \
             audiofile \
             bzip2 \
             libgcrypt \
             glib \
             libxml2
+          autoreconf -i
 
       - name: (5) Save lib packages
         run: |
