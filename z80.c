@@ -1192,6 +1192,10 @@ libspectrum_z80_write2( libspectrum_buffer *buffer, int *out_flags,
   if( libspectrum_snap_covox_active( snap ) )
     *out_flags |= LIBSPECTRUM_FLAG_SNAPSHOT_MAJOR_INFO_LOSS;
 
+  /* We don't save the state of D/A converter state or channels */
+  if( libspectrum_snap_dac3ch_active( snap ) )
+    *out_flags |= LIBSPECTRUM_FLAG_SNAPSHOT_MAJOR_INFO_LOSS;
+
   /* .z80 format doesn't save the ULAplus state at all */
   if( libspectrum_snap_ulaplus_active( snap ) )
     *out_flags |= LIBSPECTRUM_FLAG_SNAPSHOT_MAJOR_INFO_LOSS;

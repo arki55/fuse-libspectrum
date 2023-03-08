@@ -276,6 +276,13 @@ libspectrum_byte* didaktik80_ram 1
 int covox_active
 libspectrum_byte covox_dac
 
+/* D/A converter's channel status */
+int dac3ch_active
+libspectrum_byte dac3ch_channel_a
+libspectrum_byte dac3ch_channel_b
+libspectrum_byte dac3ch_channel_c
+libspectrum_byte dac3ch_control
+
 /* ULAplus emulation */
 int ulaplus_active
 int ulaplus_palette_enabled

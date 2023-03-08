@@ -312,6 +312,7 @@ LIBSPECTRUM_ID_SNAPSHOT_SP      A .sp snapshot
 LIBSPECTRUM_ID_SNAPSHOT_SZX     A .szx snapshot (as used by Spectaculator)
 LIBSPECTRUM_ID_SNAPSHOT_Z80	A .z80 snapshot
 LIBSPECTRUM_ID_SNAPSHOT_ZXS	A .zxs snapshot (as used by zx32)
+LIBSPECTRUM_ID_SNAPSHOT_DSNAP   A .S snapshot (as used by D40/D80)
 
 LIBSPECTRUM_ID_TAPE_CSW		A .csw tape image
 LIBSPECTRUM_ID_TAPE_TAP		A `normal' (Z80-style) .tap tape image
@@ -760,6 +761,12 @@ The available properties (along with their types) are:
 * int covox_active
 * libspectrum_byte covox_dac
 
+* int dac3ch_active
+* libspectrum_byte dac3ch_channel_a
+* libspectrum_byte dac3ch_channel_b
+* libspectrum_byte dac3ch_channel_c
+* libspectrum_byte dac3ch_control
+
 * int multiface_active;
 * int multiface_paged;
 * int multiface_model_one;
@@ -897,7 +904,7 @@ snapshot to specify the creator of the file. This can be NULL, in
 which case no information will be written. Currently, only the .szx
 format will make any use of this information.
 
-The only formats for which serialisation is supported are .sna, .szx
+The only formats for which serialisation is supported are .sna, .szx, .s
 and .z80.
 
 Tape functions

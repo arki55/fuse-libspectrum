@@ -322,6 +322,25 @@ g_hash_table_foreach (GHashTable *hash_table,
       (* func) (node->key, node->value, user_data);
 }
 
+gpointer
+g_hash_table_find (GHashTable *hash_table,
+                      GHRFunc      func,
+                      gpointer    user_data)
+{
+  GHashNode *node;
+  gint i;
+
+  for (i = 0; i < HASH_TABLE_SIZE; i++) {
+    for (node = hash_table->nodes[i]; node; node = node->next) {
+      if ( ((* func) (node->key, node->value, user_data)) == TRUE ) {
+        /* Only the first one found is returned */
+        return node->value;
+      }
+    }
+  }
+  return NULL;
+}
+
 guint
 g_hash_table_size (GHashTable *hash_table)
 {
