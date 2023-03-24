@@ -144,7 +144,7 @@ szx_write_block_test_with_flags( const char *id, libspectrum_machine machine,
       }
     }
   } else {
-    fprintf( stderr, "Chunk has wrong length (expected %d, got %d)\n", total_length, chunk->length );
+    fprintf( stderr, "Chunk has wrong length (expected %zu, got %zu)\n", total_length, chunk->length );
     r = TEST_FAIL;
   }
 
