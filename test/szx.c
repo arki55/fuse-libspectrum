@@ -104,6 +104,7 @@ szx_write_block_test_with_flags( const char *id, libspectrum_machine machine,
 {
   libspectrum_snap *snap;
   libspectrum_byte *buffer; size_t length;
+  libspectrum_error error;
   int out_flags;
   szx_chunk_t *chunk;
   size_t i;
@@ -117,8 +118,14 @@ szx_write_block_test_with_flags( const char *id, libspectrum_machine machine,
 
   length = 0;
   buffer = NULL;
-  libspectrum_snap_write( &buffer, &length, &out_flags, snap,
+  error = libspectrum_snap_write( &buffer, &length, &out_flags, snap,
                           LIBSPECTRUM_ID_SNAPSHOT_SZX, NULL, flags );
+  if (error != LIBSPECTRUM_ERROR_NONE) {
+    fprintf( stderr, "Snap write failed with error %d\n", error );
+    if (buffer)
+      libspectrum_free( buffer );
+    return TEST_INCOMPLETE;
+  }
   libspectrum_snap_free( snap );
 
   chunk = find_szx_chunk( buffer, length, id );
@@ -403,14 +410,14 @@ zxcf_setter( libspectrum_snap *snap )
 
   libspectrum_snap_set_zxcf_upload( snap, 1 );
   libspectrum_snap_set_zxcf_memctl( snap, 0x37 );
-  libspectrum_snap_set_zxcf_pages( snap, 0x55 );
+  libspectrum_snap_set_zxcf_pages( snap, 0x35 );
 }
 
 static libspectrum_byte
 test_39_expected[] = {
   0x01, 0x00, /* Flags */
   0x37, /* Memory control */
-  0x55 /* Page count */
+  0x35 /* Page count */
 };
 
 test_return_t
