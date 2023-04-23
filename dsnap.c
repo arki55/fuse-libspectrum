@@ -45,7 +45,7 @@
 
 #include "internals.h"
 
-// Parity flag in F reg.
+/* Parity flag in F reg. */
 #define FLAG_P	0x04
 
 /* Length = 128 bytes + 48K */
@@ -124,56 +124,56 @@ libspectrum_dsnap_read_header( const libspectrum_byte *buffer,
     return LIBSPECTRUM_ERROR_CORRUPT;
   }
 
-  // Program's SP is at end of header
+  /* Program's SP is at end of header */
   libspectrum_word offset = LIBSPECTRUM_DSNAP_HEADER_LENGTH;
   libspectrum_snap_set_sp ( snap, buffer[offset-2] + buffer[offset-2 +1]*0x100 );
   
-  // Current registers first
+  /* Current registers first */
   libspectrum_snap_set_a  ( snap, buffer[offset-4 +1] );
   libspectrum_snap_set_f  ( snap, buffer[offset-4 +0] );
   libspectrum_snap_set_bc ( snap, buffer[offset-6] + buffer[offset-6 +1]*0x100 );
   libspectrum_snap_set_de ( snap, buffer[offset-8] + buffer[offset-8 +1]*0x100 );
   libspectrum_snap_set_hl ( snap, buffer[offset-10] + buffer[offset-10 +1]*0x100 );
   
-  // Shadow registers next
+  /* Shadow registers next */
   libspectrum_snap_set_a_ ( snap, buffer[offset-12 +1] );
   libspectrum_snap_set_f_ ( snap, buffer[offset-12 +0] );
   libspectrum_snap_set_bc_( snap, buffer[offset-14] + buffer[offset-14 +1]*0x100 );
   libspectrum_snap_set_de_( snap, buffer[offset-16] + buffer[offset-16 +1]*0x100 );
   libspectrum_snap_set_hl_( snap, buffer[offset-18] + buffer[offset-18 +1]*0x100 );
 
-  // IX, IY only once, have no shadow copies
+  /* IX, IY only once, have no shadow copies */
   libspectrum_snap_set_ix ( snap, buffer[offset-20] + buffer[offset-20 +1]*0x100 );
   libspectrum_snap_set_iy ( snap, buffer[offset-22] + buffer[offset-22 +1]*0x100 );
 
-  // The last one is I register, interrupt vector + if to use IM1 or IM2 + DI/EI
-  // Note: "AF" Word is read from -24 . F is checked for "PE" condition, 
-  //       then A is copied to I and compared to 63 (operation changes F).
-  //       Source of PE flag was operation LD A,I before which copies IFF2 to Parity.
-  libspectrum_byte interrupt_flag1 = buffer[offset-24];     // F
-  libspectrum_byte interrupt_flag2 = buffer[offset-24 +1];  // A
+  /* The last one is I register, interrupt vector + if to use IM1 or IM2 + DI/EI
+     Note: "AF" Word is read from -24 . F is checked for "PE" condition,
+           then A is copied to I and compared to 63 (operation changes F).
+           Source of PE flag was operation LD A,I before which copies IFF2 to Parity. */
+  libspectrum_byte interrupt_flag1 = buffer[offset-24];     /* F */
+  libspectrum_byte interrupt_flag2 = buffer[offset-24 +1];  /* A */
   
   libspectrum_snap_set_i  ( snap, interrupt_flag2 );
 
   if (interrupt_flag2 == 63) {
-    // Not IM 2
+    /* Not IM 2 */
     libspectrum_snap_set_im( snap, 1 );
   } else {
-    // It is IM 2
+    /* It is IM 2 */
     libspectrum_snap_set_im( snap, 2 );
   }
 
   if ( interrupt_flag1 & FLAG_P ) {
-    // Allow interrupts ( PE condition flag on F )
+    /* Allow interrupts ( PE condition flag on F ) */
     libspectrum_snap_set_iff1( snap, 1);
     libspectrum_snap_set_iff2( snap, 1);
   } else {
-    // I would assume default is 0, but debugging showed other wise
+    /* I would assume default is 0, but debugging showed other wise */
     libspectrum_snap_set_iff1( snap, 0);
     libspectrum_snap_set_iff2( snap, 0);
   }
 
-  // Activate melodik. No idea how to make it optional.
+  /* Activate melodik. No idea how to make it optional. */
   libspectrum_snap_set_melodik_active( snap, 1 );
   
   /*
@@ -390,26 +390,26 @@ static void
 write_header( libspectrum_buffer *buffer, libspectrum_snap *snap,
               libspectrum_word sp )
 {
-  // Header has 128B, but only last 24 bytes are used. Content before is irrelevant.
-  // Less by 10 chars - signature to flag snaphost created by fuse
+  /* Header has 128B, but only last 24 bytes are used. Content before is irrelevant.
+     Less by 10 chars - signature to flag snaphost created by fuse */
   libspectrum_buffer_write( buffer, LIBSPECTRUM_DSNAP_SIGNATURE, strlen(LIBSPECTRUM_DSNAP_SIGNATURE) );
   short padding = LIBSPECTRUM_DSNAP_HEADER_LENGTH - 24 - strlen(LIBSPECTRUM_DSNAP_SIGNATURE) ;
   for (short b=0; b < padding; b++) {
     libspectrum_buffer_write_byte( buffer, 0 );
   }
 
-  // The last one (when pushing into stack from the end of header) is I register, 
-  //    interrupt vector + if to use IM1 or IM2 + DI/EI
+  /* The last one (when pushing into stack from the end of header) is I register,
+     interrupt vector + if to use IM1 or IM2 + DI/EI
 
-  // If interrupts allowed (EI), then write 4 ("PE" bit on F reg.), else just 0.
-  // Source of PE is operation LD A,I which sets IFF2 to Parity flag.
+     If interrupts allowed (EI), then write 4 ("PE" bit on F reg.), else just 0.
+     Source of PE is operation LD A,I which sets IFF2 to Parity flag. */
   if ( libspectrum_snap_iff2 ( snap ) == 1 ) {
     libspectrum_buffer_write_byte( buffer, FLAG_P );
   } else {
     libspectrum_buffer_write_byte( buffer, 0 );
   }
 
-  // If mode 2: I reg. is written, else "63" + mode 1 assumed
+  /* If mode 2: I reg. is written, else "63" + mode 1 assumed */
   if ( libspectrum_snap_im( snap ) == 0x02 ) {
     libspectrum_buffer_write_byte( buffer, libspectrum_snap_i ( snap ) ); 
   } else {
@@ -417,25 +417,25 @@ write_header( libspectrum_buffer *buffer, libspectrum_snap *snap,
   }
   
 
-  // IX, IY only once, have no shadow copies
+  /* IX, IY only once, have no shadow copies */
   libspectrum_buffer_write_word( buffer, libspectrum_snap_iy ( snap ) );
   libspectrum_buffer_write_word( buffer, libspectrum_snap_ix ( snap ) );
 
-  // Shadow registers next
+  /* Shadow registers next */
   libspectrum_buffer_write_word( buffer, libspectrum_snap_hl_ ( snap ) );
   libspectrum_buffer_write_word( buffer, libspectrum_snap_de_ ( snap ) );
   libspectrum_buffer_write_word( buffer, libspectrum_snap_bc_ ( snap ) );
   libspectrum_buffer_write_byte( buffer, libspectrum_snap_f_  ( snap ) );
   libspectrum_buffer_write_byte( buffer, libspectrum_snap_a_  ( snap ) );
 
-  // Current registers
+  /* Current registers */
   libspectrum_buffer_write_word( buffer, libspectrum_snap_hl ( snap ) );
   libspectrum_buffer_write_word( buffer, libspectrum_snap_de ( snap ) );
   libspectrum_buffer_write_word( buffer, libspectrum_snap_bc ( snap ) );
   libspectrum_buffer_write_byte( buffer, libspectrum_snap_f  ( snap ) );
   libspectrum_buffer_write_byte( buffer, libspectrum_snap_a  ( snap ) );
 
-  // Program's SP is at end of header
+  /* Program's SP is at end of header */
   libspectrum_buffer_write_word( buffer, sp );
 
   /* 
