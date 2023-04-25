@@ -41,6 +41,7 @@ libspectrum_la_SOURCES = bzip2.c \
 			 rzx.c \
 			 sna.c \
 			 snp.c \
+			 dsnap.c \
 			 snapshot.c \
 			 snap_accessors.c \
 			 sp.c \
