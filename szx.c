@@ -311,7 +311,7 @@ write_atrp_chunk( libspectrum_buffer *buffer, libspectrum_buffer *block_data,
 static void
 write_zxcf_chunk( libspectrum_buffer *buffer, libspectrum_buffer *data,
 		  libspectrum_snap *snap );
-static void
+static libspectrum_error
 write_cfrp_chunk( libspectrum_buffer *buffer, libspectrum_buffer *block_data,
                   libspectrum_snap *snap, int page, int compress );
 static void
@@ -2800,7 +2800,11 @@ libspectrum_szx_write( libspectrum_buffer *buffer, int *out_flags,
     write_zxcf_chunk( buffer, block_data, snap );
 
     for( i = 0; i < libspectrum_snap_zxcf_pages( snap ); i++ ) {
-      write_cfrp_chunk( buffer, block_data, snap, i, compress );
+      error = write_cfrp_chunk( buffer, block_data, snap, i, compress );
+      if( error != LIBSPECTRUM_ERROR_NONE ) {
+        libspectrum_buffer_free( block_data );
+        return error;
+      }
     }
   }
 
@@ -3781,14 +3785,23 @@ write_zxcf_chunk( libspectrum_buffer *buffer, libspectrum_buffer *data,
   write_chunk( buffer, ZXSTBID_ZXCF, data );
 }
 
-static void
+static libspectrum_error
 write_cfrp_chunk( libspectrum_buffer *buffer, libspectrum_buffer *block_data,
                   libspectrum_snap *snap, int page, int compress )
 {
+  if( page >= SNAPSHOT_ZXCF_PAGES ) {
+        libspectrum_print_error( LIBSPECTRUM_ERROR_INVALID,
+                "%s:write_cfrp_chunk: page number %lu too high",
+              __FILE__, (unsigned long)page );
+        return LIBSPECTRUM_ERROR_INVALID;
+  }
+
   const libspectrum_byte *data = libspectrum_snap_zxcf_ram( snap, page );
 
   write_ram_page( buffer, block_data, ZXSTBID_ZXCFRAMPAGE, data, 0x4000, page,
                   compress, 0x00 );
+
+  return LIBSPECTRUM_ERROR_NONE;
 }
 
 #ifdef HAVE_ZLIB_H
