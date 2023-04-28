@@ -80,7 +80,7 @@ jobs:
           echo ""
 
           # Override path to allow cross-compiling
-          echo "$PATH:$DEVKITPPC/bin" >> $GITHUB_PATH
+          echo "$GITHUB_PATH:$DEVKITPPC/bin" >> $GITHUB_PATH
 
       - name: (2) Check out repository code
         uses: actions/checkout@v3
