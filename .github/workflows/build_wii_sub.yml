@@ -79,6 +79,9 @@ jobs:
           dkp-pacman -Sl dkp-libs
           echo ""
 
+          # Override path to allow cross-compiling (add to file)
+          echo "$DEVKITPPC/bin" >> $GITHUB_PATH
+
       - name: (2) Check out repository code
         uses: actions/checkout@v3
         with:
@@ -125,6 +128,8 @@ jobs:
 
       - name: (8) Verify output from configure
         run: |
+          .github/scripts/in_config.sh "checking whether we are cross compiling... yes"
+          .github/scripts/in_config.sh "checking for powerpc-eabi-gcc... powerpc-eabi-gcc"
           .github/scripts/in_config.sh "libspectrum is ready to be compiled"
           .github/scripts/in_config.sh "zlib support: ${{ inputs.use_zlib && 'yes' || 'no' }}"
           .github/scripts/in_config.sh "bzip2 support: ${{ inputs.use_bzip2 && 'yes' || 'no' }}"
@@ -140,7 +145,7 @@ jobs:
       - name: (10) Install
         run: |
           echo "Running make install .."
-          sudo make install
+          make install
 
       - name: (11) Copy dependencies
         run: |
