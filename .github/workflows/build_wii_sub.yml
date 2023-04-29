@@ -145,7 +145,10 @@ jobs:
       - name: (10) Install
         run: |
           echo "Running make install .."
-          sudo make install
+          echo "Path is: $GITHUB_PATH"
+          whereis powerpc-eabi-ranlib
+          powerpc-eabi-ranlib
+          make install
 
       - name: (11) Copy dependencies
         run: |
