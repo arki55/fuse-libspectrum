@@ -79,8 +79,8 @@ jobs:
           dkp-pacman -Sl dkp-libs
           echo ""
 
-          # Override path to allow cross-compiling
-          echo "$GITHUB_PATH:$DEVKITPPC/bin" >> "$GITHUB_PATH"
+          # Override path to allow cross-compiling (add to file)
+          echo "$DEVKITPPC/bin" >> $GITHUB_PATH
 
       - name: (2) Check out repository code
         uses: actions/checkout@v3
@@ -144,8 +144,6 @@ jobs:
 
       - name: (10) Install
         run: |
-          echo "Path(1) is: $GITHUB_PATH"
-          echo "Path(2) is: $PATH"
           echo "Running make install .."
           make install
 
