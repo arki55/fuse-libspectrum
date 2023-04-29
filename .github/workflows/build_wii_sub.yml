@@ -144,10 +144,13 @@ jobs:
 
       - name: (10) Install
         run: |
+          # Override path to allow cross-compiling (again?)
+          echo "$GITHUB_PATH:$DEVKITPPC/bin" >> $GITHUB_PATH
+          echo "$PATH:$DEVKITPPC/bin" >> $PATH
+          echo "Path(1) is: $GITHUB_PATH"
+          echo "Path(2) is: $PATH"
+
           echo "Running make install .."
-          echo "Path is: $GITHUB_PATH"
-          whereis powerpc-eabi-ranlib
-          powerpc-eabi-ranlib
           make install
 
       - name: (11) Copy dependencies
