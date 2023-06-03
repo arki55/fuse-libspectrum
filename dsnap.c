@@ -390,11 +390,14 @@ static void
 write_header( libspectrum_buffer *buffer, libspectrum_snap *snap,
               libspectrum_word sp )
 {
+  short padding;
+  short b;
+
   /* Header has 128B, but only last 24 bytes are used. Content before is irrelevant.
      Less by 10 chars - signature to flag snaphost created by fuse */
   libspectrum_buffer_write( buffer, LIBSPECTRUM_DSNAP_SIGNATURE, strlen(LIBSPECTRUM_DSNAP_SIGNATURE) );
-  short padding = LIBSPECTRUM_DSNAP_HEADER_LENGTH - 24 - strlen(LIBSPECTRUM_DSNAP_SIGNATURE) ;
-  for (short b=0; b < padding; b++) {
+  padding = LIBSPECTRUM_DSNAP_HEADER_LENGTH - 24 - strlen(LIBSPECTRUM_DSNAP_SIGNATURE);
+  for( b=0; b < padding; b++ ) {
     libspectrum_buffer_write_byte( buffer, 0 );
   }
 
