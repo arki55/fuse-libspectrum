@@ -355,16 +355,16 @@ dump_entry_stat( struct libspectrum_zip *z, zip_stat *info )
 }
 
 /* Jump to next entry in the archive */
-int
+libspectrum_error
 libspectrum_zip_next( struct libspectrum_zip *z, zip_stat *info )
 {
-  if( !z || z->state == ARCHIVE_CLOSED ) return 1;
+  if( !z || z->state == ARCHIVE_CLOSED ) return LIBSPECTRUM_ERROR_UNKNOWN;
 
-  if( read_directory( z ) ) return 1;
+  if( read_directory( z ) ) return LIBSPECTRUM_ERROR_UNKNOWN;
 
   dump_entry_stat( z, info );
 
-  return 0;
+  return LIBSPECTRUM_ERROR_NONE;
 }
 
 /* Locate a file in the archive (non-sequential acces) */
