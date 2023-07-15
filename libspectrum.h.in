@@ -259,6 +259,9 @@ typedef enum libspectrum_id_t {
 
   LIBSPECTRUM_ID_SCREEN_MLT,		/* .mlt screen file */
 
+  /* Below here, present only in FUTURE version */
+  LIBSPECTRUM_ID_SNAPSHOT_DSNAP,		/* .S snapshot (D40/D80) */
+
 } libspectrum_id_t;
 
 /* And 'classes' of file */

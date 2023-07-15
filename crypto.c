@@ -232,7 +232,7 @@ get_mpi( gcry_mpi_t *mpi, gcry_sexp_t sexp, const char *token )
     return LIBSPECTRUM_ERROR_LOGIC;
   }
 
-  *mpi = gcry_sexp_nth_mpi( pair, 1, GCRYMPI_FMT_STD );
+  *mpi = gcry_sexp_nth_mpi( pair, 1, GCRYMPI_FMT_USG );
   if( !(*mpi) ) {
     libspectrum_print_error( LIBSPECTRUM_ERROR_LOGIC,
 			     "get_mpis: couldn't create MPI '%s'", token );
