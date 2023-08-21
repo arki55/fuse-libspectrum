@@ -842,10 +842,10 @@ libspectrum_uncompress_file( unsigned char **new_buffer, size_t *new_length,
 
 #else				/* #ifdef HAVE_ZLIB_H */
 
-    libspectrum_print_error( LIBSPECTRUM_ERROR_UNKNOWN,
+    libspectrum_print_error( LIBSPECTRUM_ERROR_MISSING_ZLIB,
 			     "zlib not available to decompress gzipped file" );
     if( new_filename ) libspectrum_free( *new_filename );
-    return LIBSPECTRUM_ERROR_UNKNOWN;
+    return LIBSPECTRUM_ERROR_MISSING_ZLIB;
 
 #endif				/* #ifdef HAVE_ZLIB_H */
 
