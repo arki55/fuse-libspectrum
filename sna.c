@@ -335,6 +335,10 @@ libspectrum_sna_write( libspectrum_buffer *buffer, int *out_flags,
   if( libspectrum_snap_usource_active( snap ) )
     *out_flags |= LIBSPECTRUM_FLAG_SNAPSHOT_MAJOR_INFO_LOSS;
 
+  /* We don't save the uSpeech state at all */
+  if( libspectrum_snap_uspeech_active( snap ) )
+    *out_flags |= LIBSPECTRUM_FLAG_SNAPSHOT_MAJOR_INFO_LOSS;
+
   /* We don't save the DISCiPLE state at all */
   if( libspectrum_snap_disciple_active( snap ) )
     *out_flags |= LIBSPECTRUM_FLAG_SNAPSHOT_MAJOR_INFO_LOSS;
