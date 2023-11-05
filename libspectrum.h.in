@@ -99,6 +99,7 @@ typedef enum libspectrum_error {
   LIBSPECTRUM_ERROR_SIGNATURE,
   LIBSPECTRUM_ERROR_SLT,	/* .slt data found at end of a .z80 file */
   LIBSPECTRUM_ERROR_INVALID,	/* Invalid parameter supplied */
+  LIBSPECTRUM_ERROR_MISSING_ZLIB, /* Missing or not used zlib.h */
 
   LIBSPECTRUM_ERROR_LOGIC = -1,
 
@@ -258,6 +259,9 @@ typedef enum libspectrum_id_t {
   /* Below here, present only in 1.4.0 and later */
 
   LIBSPECTRUM_ID_SCREEN_MLT,		/* .mlt screen file */
+
+  /* Below here, present only in FUTURE version */
+  LIBSPECTRUM_ID_SNAPSHOT_DSNAP,		/* .S snapshot (D40/D80) */
 
 } libspectrum_id_t;
 

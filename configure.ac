@@ -85,7 +85,6 @@ AC_PATH_PROG(PERL, perl)
 AC_SUBST(PERL)
 
 dnl Checks for header files.
-AC_HEADER_STDC
 AC_CHECK_HEADERS(stdint.h strings.h unistd.h)
 
 dnl Checks for typedefs, structures, and compiler characteristics.

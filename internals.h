@@ -150,8 +150,9 @@ extern const char * const libspectrum_tzx_signature;
 
 /* Convert a 48K memory dump into separate RAM pages */
 
-int libspectrum_split_to_48k_pages( libspectrum_snap *snap,
-				    const libspectrum_byte* data );
+libspectrum_error
+libspectrum_split_to_48k_pages( libspectrum_snap *snap,
+                                const libspectrum_byte* data );
 
 /* Sizes of some of the arrays in the snap structure */
 #define SNAPSHOT_RAM_PAGES 16
@@ -180,6 +181,12 @@ internal_sna_read( libspectrum_snap *snap,
 		   const libspectrum_byte *buffer, size_t buffer_length );
 libspectrum_error
 libspectrum_sna_write( libspectrum_buffer *buffer, int *out_flags,
+                       libspectrum_snap *snap, int in_flags );
+libspectrum_error
+internal_dsnap_read( libspectrum_snap *snap,
+		   const libspectrum_byte *buffer, size_t buffer_length );
+libspectrum_error
+libspectrum_dsnap_write( libspectrum_buffer *buffer, int *out_flags,
                        libspectrum_snap *snap, int in_flags );
 libspectrum_error
 libspectrum_snp_read( libspectrum_snap *snap,
