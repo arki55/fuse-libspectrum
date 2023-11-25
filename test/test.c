@@ -256,6 +256,10 @@ test_3( void )
 static test_return_t
 test_4( void )
 {
+  #ifndef HAVE_ZLIB_H
+    return TEST_SKIPPED; /* gzip not enabled in build */
+  #endif
+
   const char *filename = STATIC_TEST_PATH( "invalid.gz" );
   return read_snap( filename, filename, LIBSPECTRUM_ERROR_UNKNOWN );
 }
@@ -264,6 +268,10 @@ test_4( void )
 static test_return_t
 test_5( void )
 {
+  #ifndef HAVE_ZLIB_H
+    return TEST_SKIPPED; /* gzip not enabled in build */
+  #endif
+
   return read_snap( STATIC_TEST_PATH( "invalid.gz" ), NULL, LIBSPECTRUM_ERROR_UNKNOWN );
 }
 
@@ -413,6 +421,10 @@ test_19( void )
 static test_return_t
 test_20( void )
 {
+  #ifndef HAVE_ZLIB_H
+    return TEST_SKIPPED; /* gzip not enabled in build */
+  #endif
+
   const char *filename = STATIC_TEST_PATH( "sp-2000.sna.gz" );
   return read_snap( filename, filename, LIBSPECTRUM_ERROR_CORRUPT );
 } 
@@ -420,6 +432,10 @@ test_20( void )
 static test_return_t
 test_21( void )
 {
+  #ifndef HAVE_ZLIB_H
+    return TEST_SKIPPED; /* gzip not enabled in build */
+  #endif
+
   const char *filename = STATIC_TEST_PATH( "sp-ffff.sna.gz" );
   return read_snap( filename, filename, LIBSPECTRUM_ERROR_CORRUPT );
 } 
@@ -690,6 +706,10 @@ test_26( void )
 static test_return_t
 test_27( void )
 {
+  #ifndef HAVE_ZLIB_H
+    return TEST_SKIPPED; /* gzip not enabled in build */
+  #endif
+
   const char *filename = STATIC_TEST_PATH( "empty.szx" );
   libspectrum_byte *buffer = NULL;
   size_t filesize = 0;
@@ -764,6 +784,10 @@ test_30( void )
 static test_return_t
 test_71( void )
 {
+#ifndef HAVE_ZLIB_H
+  return TEST_SKIPPED; /* gzip not enabled in build */
+#endif
+
   const char *filename = STATIC_TEST_PATH( "random.szx" );
   libspectrum_byte *buffer = NULL;
   size_t filesize = 0;
@@ -1037,17 +1061,25 @@ main( int argc, char *argv[] )
       tests_done++;
       switch( test->test() ) {
       case TEST_PASS:
-	printf( "passed\n" );
-	pass++;
-	break;
+        /* Test executed completely and passed */
+	      printf( "passed\n" );
+	      pass++;
+	      break;
       case TEST_FAIL:
-	printf( "FAILED\n" );
-	fail++;
-	break;
+        /* Test executed completely but failed */
+	      printf( "FAILED\n" );
+	      fail++;
+	      break;
       case TEST_INCOMPLETE:
-	printf( "NOT COMPLETE\n" );
-	incomplete++;
-	break;
+        /* Error occurred while executing test */
+	      printf( "NOT COMPLETE\n" );
+	      incomplete++;
+	      break;
+      case TEST_SKIPPED:
+        /* Not possible to run this test (missing dependencies) */
+	      printf( "skipped\n" );
+	      tests_skipped++;
+	      break;
       }
     } else {
       tests_skipped++;
