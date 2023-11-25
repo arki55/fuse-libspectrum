@@ -1179,6 +1179,10 @@ libspectrum_z80_write2( libspectrum_buffer *buffer, int *out_flags,
   if( libspectrum_snap_usource_active( snap ) )
     *out_flags |= LIBSPECTRUM_FLAG_SNAPSHOT_MAJOR_INFO_LOSS;
 
+  /* .z80 format doesn't save the uSpeech state at all */
+  if( libspectrum_snap_uspeech_active( snap ) )
+    *out_flags |= LIBSPECTRUM_FLAG_SNAPSHOT_MAJOR_INFO_LOSS;
+
   /* .z80 format doesn't save the DISCiPLE state well but we don't support
      what is there either */
   if( libspectrum_snap_disciple_active( snap ) )

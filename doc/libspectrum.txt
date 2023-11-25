@@ -729,6 +729,9 @@ The available properties (along with their types) are:
 * libspectrum_byte* usource_rom[1]
 * size_t usource_rom_length[1]
 
+* int uspeech_active
+* int uspeech_paged
+
 * int disciple_active
 * int disciple_paged
 * int disciple_inhibit_button
