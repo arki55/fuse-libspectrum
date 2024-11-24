@@ -85,19 +85,28 @@ jobs:
         run: |
           echo "Not needed here"
 
-      - name: (4) Install dependencies
+      - name: (4a) Brew doctor
         run: |
           echo "Inspect if brew installed .."
           brew doctor || true
-          
+
+      - name: (4b) Install dependencies
+        run: |
           echo "Installing dependencies .."
           brew install \
             automake \
-            audiofile \
             bzip2 \
             libgcrypt \
             glib \
             libxml2
+          autoreconf -i
+
+      - name: (4c) Install (troubling) dependencies
+        run: |
+          echo "Installing (troubling) dependencies .."
+          brew install \
+            audiofile \
+            || true
           autoreconf -i
 
       - name: (5) Save lib packages
