@@ -97,6 +97,7 @@ jobs:
             automake \
             bzip2 \
             libgcrypt \
+            libtool \
             glib \
             libxml2
           autoreconf -i
