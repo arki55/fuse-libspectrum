@@ -1,8 +1,8 @@
 name: Libspectrum for MacOS
 run-name: Build and test Libspectrum for MacOS / ${{ github.actor }} /
 
-# Executed upon each commit pushed, merge commit in PR
-on: [push, pull_request]
+on:
+  workflow_call:
   
 jobs:
   #################
