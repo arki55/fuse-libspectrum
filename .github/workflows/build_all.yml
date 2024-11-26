@@ -1,0 +1,31 @@
+name: Libspectrum - Build for all platforms
+run-name: Build and test Libspectrum for all platforms / ${{ github.actor }} /
+
+on:
+  # Can be called manually
+  workflow_call:
+
+  # Executed weekly on Sunday night
+  schedule:
+    - cron: "0 3 * * 0"
+
+  # Executed upon each merge commit in PR
+  pull_request:
+
+jobs:
+  build-linux-all:
+    name: "Build Linux"
+    uses: ./.github/workflows/build_linux_all.yml
+
+  build-macos-all:
+    name: "Build MacOS"
+    uses: ./.github/workflows/build_macos_all.yml
+
+  build-wii-all:
+    name: "Build WII"
+    uses: ./.github/workflows/build_wii_all.yml
+
+  build-windows-all:
+    name: "Build Windows"
+    uses: ./.github/workflows/build_windows_all.yml
+  

@@ -1,0 +1,61 @@
+name: Libspectrum for MacOS
+run-name: Build and test Libspectrum for MacOS / ${{ github.actor }} /
+
+on:
+  workflow_call:
+  
+jobs:
+  #################
+  ### FAKE GLIB ###
+  #################
+
+  # TODO: Libgcrypt stopped working. No build with it possible.
+  # TODO: The available brew lib was disabled and is not recognized by configure. No build with it possible.
+
+  # 1. Default = Fake glib + all optional (and working) libs enabled
+  default-fake-glib:
+    name: "Libspectrum + all libs (MacOS, fake glib)"
+    uses: ./.github/workflows/build_macos_sub.yml
+    with:
+      key: "default-fake-glib"
+      use_fake_glib: true
+      use_zlib: true
+      use_bzip2: true
+      use_libgcrypt: false # See TODO above
+      use_libaudiofile: false # See TODO above
+
+  # 2. Fake glib + zlib
+  no-zlib-fake-glib:
+    name: "Libspectrum with zlib (MacOS, fake glib)"
+    uses: ./.github/workflows/build_macos_sub.yml
+    with:
+      key: "with-zlib-fake-glib"
+      use_fake_glib: true
+      use_zlib: true
+      use_bzip2: false
+      use_libgcrypt: false # See TODO above
+      use_libaudiofile: false # See TODO above
+
+  # 3. Fake glib + bzip2
+  no-bzip2-fake-glib:
+    name: "Libspectrum with bzip2 (MacOS, fake glib)"
+    uses: ./.github/workflows/build_macos_sub.yml
+    with:
+      key: "with-bzip2-fake-glib"
+      use_fake_glib: true
+      use_zlib: false
+      use_bzip2: true
+      use_libgcrypt: false # See TODO above
+      use_libaudiofile: false # See TODO above
+
+  # 6. Fake glib - minus all optional libs
+  no-libs-fake-glib:
+    name: "Libspectrum w/o all libs (MacOS, fake glib)"
+    uses: ./.github/workflows/build_macos_sub.yml
+    with:
+      key: "no-libs-fake-glib"
+      use_fake_glib: true
+      use_zlib: false
+      use_bzip2: false
+      use_libgcrypt: false
+      use_libaudiofile: false

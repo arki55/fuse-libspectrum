@@ -1,8 +1,8 @@
 name: Libspectrum for Linux
 run-name: Build and test Libspectrum for Linux / ${{ github.actor }} /
 
-# Executed upon each commit pushed, merge commit in PR
-on: [push, pull_request]
+on:
+  workflow_call:
   
 jobs:
   #################
